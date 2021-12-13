@@ -29,9 +29,9 @@ The File Info settings allows you to set which file information is displayed.
 
 ## Screenshots
 
-<img src="https://github.com/CattailNu/obsidian-file-info-panel-plugin/tree/main/images/panel_screenshot.png" alt="File Info Panel Info view" width="200">
+<img src="https://cattail.nu/obsidian/panel_screenshot.png" alt="File Info Panel Info view" width="200">
 
-<img src="https://github.com/CattailNu/obsidian-file-info-panel-plugin/tree/main/images/sidebar_icon_screenshot.png" alt="File Info Panel Info button" width="200">
+<img src="https://cattail.nu/obsidian/sidebar_icon_screenshot.png" alt="File Info Panel Info button" width="200">
 
 ## Customization
 
@@ -93,7 +93,7 @@ The following CSS Variables can be overridden in your `obsidian.css` file.
 }
 ```
 
-<img src="https://github.com/CattailNu/obsidian-file-info-panel-plugin/tree/main/images/css_customization_variables.png" alt="File Info Panel CSS Customization Variables" width="200">
+<img src="https://cattail.nu/obsidian/css_customization_variables.png" alt="File Info Panel CSS Customization Variables" width="200">
 
 ## Compatibility
 
