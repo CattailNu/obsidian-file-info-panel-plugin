@@ -1,0 +1,52 @@
+/* obsidian-file-info-panel-plugin */
+/* https://github.com/CattailNu/obsidian-file-info-panel-plugin */
+
+.tlfFileInfoTable {
+	display: table;
+	border: none;
+	margin: 0em;
+	padding: 0em;
+}
+
+.tlfFileInfoRow {
+	display: table-row;
+	border: none;
+	margin: 0em;
+	padding: 0em;
+}
+
+.tlfFileInfoCell {
+	display: table-cell;
+	border: none;
+	margin: 0px;
+	margin-left: 0.5em;
+	padding: 0em;
+	text-align: left;
+	white-space: nowrap;
+}
+
+.tlfFileInfoLabel {
+	border: none;
+	margin: 0px;
+	margin-right: 0.2em;
+	padding: 0em;
+	font-size: 0.7em;
+	color: var(--text-muted);
+}
+
+.tlfFileInfoValue {
+	border: none;
+	margin: 0px;
+	padding: 0em;
+	font-size: 0.7em;
+}
+
+.tlfFileInfoButton {
+	border: none;
+	margin: 0px;
+	padding: 0px;
+	font-size: 0.7em;
+	color: var(--text-muted);
+	height: 2em;
+	text-align: left;
+}
