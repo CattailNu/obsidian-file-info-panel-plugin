@@ -22,11 +22,11 @@ The File Info settings allows you to set which file information is displayed.
 
 ## Settings
 
--**Show Date Created**: Display the date and time the file was created.
--**Show Date Modified**: Display the date and time the file was last modified.
--**Show File Size**: Display the human readable file size.
--**Show File**: Display the file name as a link to open the file in its default application.
--**Show Folder**: Display the file's folder as a link to open that folder.
+- **Show Date Created**: Display the date and time the file was created.
+- **Show Date Modified**: Display the date and time the file was last modified.
+- **Show File Size**: Display the human readable file size.
+- **Show File**: Display the file name as a link to open the file in its default application.
+- **Show Folder**: Display the file's folder as a link to open that folder.
 
 ## Screenshots
 
