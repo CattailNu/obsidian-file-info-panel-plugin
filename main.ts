@@ -4,9 +4,14 @@
 /* T. L. Ford */
 /* https://www.Cattail.Nu */
 
-import { App, ItemView, WorkspaceLeaf, Plugin, tlfPluginSettingTab, Setting, moment } from 'obsidian';
+import { App, ItemView, WorkspaceLeaf, MetadataCache, Plugin, MarkdownView, PluginSettingTab, Setting, moment } from 'obsidian';
 
-import { VIEW_TYPE } from "./tlfConstants";
+import { tlfPluginSettingTab } from "./tlfPluginSettingTab";
+
+import { VIEW_TYPE, INTERVAL_MINUTES } from "./tlfConstants";
+
+import { getCharacterCount, getSentenceCount, getWordCount, getParagraphCount, getWordFrequencyArray, cleanComments } from "./stats";
+
 
 import {
 	tlfPluginSettingTab,
@@ -23,9 +28,12 @@ import { formatBytes } from "./tlfUtilities";
 export default class tlfFileInfo extends Plugin {
 	settings: tlfPluginSettingTab;
 
+	processing = 0;
+	intervalTimer = null;
+
 	async onload() {
 		await this.loadSettings();
-//		console.clear();
+		// console.clear();
 
 		var a = this.app;
 		var p = this;
@@ -35,14 +43,14 @@ export default class tlfFileInfo extends Plugin {
 			(leaf) => new tlfItemView(leaf, a, p)
 		);
 
-		const ribbonIcon = this.addRibbonIcon('info', 'Cattail.Nu File Info', (evt: MouseEvent) => {
+		const ribbonIcon = this.addRibbonIcon('info', 'File Info Panel', (evt: MouseEvent) => {
 			// open or close the file info window
 			this.toggleView();
 		});
 
 		this.addCommand({
 			id: 'form-info-show-window',
-			name: 'Show/Hide Cattail.Nu Form Info',
+			name: 'Show/Hide File Info Panel',
 			callback: () => {
 				// open or close the file info window
 				this.toggleView();
@@ -76,21 +84,102 @@ export default class tlfFileInfo extends Plugin {
 	async requeryStats() {
 		var file = this.app.workspace.getActiveFile();
 
-		this.app.workspace.getLeavesOfType(VIEW_TYPE).forEach((leaf) => {
+		this.app.workspace.getLeavesOfType(VIEW_TYPE).forEach(async (leaf) => {
 			if (leaf.view instanceof tlfItemView) {
+				if (this.processing) return;
+				this.processing = 1;
+
 				if (! file ) {
 					leaf.view.strCreated = "";
 					leaf.view.strModified = "";
 					leaf.view.strFile = "";
 					leaf.view.strFolder = "";
 					leaf.view.strSize = "";
+					leaf.view.numWords = 0;
+					leaf.view.numCharacters = 0;
+					leaf.view.numSentences = 0;
+					leaf.view.numParagraphs = 0;
+					leaf.view.numSelectedWords = 0;
+					leaf.view.numSelectedParagraphs = 0;
+					leaf.view.numSelectedCharacters = 0;
+					leaf.view.numSelectedSentences = 0;
+					leaf.view.arrCurrentWordFrequency = [];
+					leaf.view.isText = 0;
+
 				} else {
+
+					var currentWords = 0;
+					var currentCharacters = 0;
+					var currentSentences = 0;
+					var currentParagraphs = 0;
+					var selectedWords = 0;
+					var selectedCharacters = 0;
+					var selectedSentences = 0;
+					var selectedParagraphs = 0;
+					var currentWordFrequency = [];
+					var isText = 0;
+
+					if (file.extension === "md" || file.extension === "txt") {
+						isText = 1;
+						var data = "";
+						data = await file.vault.cachedRead(file);
+
+						if ( data ) {
+							if ( this.settings.showCurrentWords ) { currentWords = getWordCount(data); }
+							if ( this.settings.showCurrentCharacters ) { currentCharacters = getCharacterCount(data); }
+							if ( this.settings.showCurrentSentences ) { currentSentences = getSentenceCount(data); }
+							if ( this.settings.showCurrentParagraphs ) { currentParagraphs = getParagraphCount(data); }
+							if ( this.settings.showWordFrequency ) { currentWordFrequency = getWordFrequencyArray(data); }
+
+						}
+
+						if ( this.settings.showSelectedWords ||
+							this.settings.showSelectedCharacters ||
+							this.settings.showSelectedSentences ||
+							this.settings.showSelectedParagraphs
+						) {
+							if ( ! this.intervalTimer ) {
+								this.intervalTimer = window.setInterval(() => {
+									this.requeryStats();
+									}
+								, INTERVAL_MINUTES * 60 * 1000);
+								this.registerInterval(this.interval);
+							}
+							var selectedData = "";
+
+							const v = this.app.workspace.getActiveViewOfType(MarkdownView);
+							if ( v.file == file ) {
+								if ("editor" in v) {
+									if ( v.getMode() === "source" ) {
+										if ( v.editor.somethingSelected() ) {
+											selectedData = v.editor.getSelection();
+											if ( this.settings.showSelectedWords ) { selectedWords = getWordCount(selectedData); }
+											if ( this.settings.showSelectedCharacters ) { selectedCharacters = getCharacterCount(selectedData); }
+											if ( this.settings.showSelectedSentences ) { selectedSentences = getSentenceCount(selectedData); }
+											if ( this.settings.showSelectedParagraphs ) { selectedParagraphs = getParagraphCount(selectedData); }
+										}
+									}
+								}
+							}
+						} else {
+							// they have changed settings to turn these off
+							// so kill it.
+							if ( this.intervalTimer ) {
+								window.clearInterval(this.intervalTimer);
+								this.intervalTimer = null;
+							}						
+						}
+						
+
+					}
+
 					var cDate = moment.unix(file.stat.ctime/1000);
 					var cString = cDate.format('llll');
 
 					var mDate = moment.unix(file.stat.mtime/1000);
 					var mString = mDate.format('llll');
 
+					leaf.view.isText = isText;
 					leaf.view.strCreated = cString;
 					leaf.view.strCreatedFromNow = cDate.fromNow();
 
@@ -102,8 +191,21 @@ export default class tlfFileInfo extends Plugin {
 					leaf.view.strFullPath = file.vault.adapter.basePath + file.vault.adapter.path.sep + file.name;
 					leaf.view.strSize = formatBytes(file.stat.size,1);
 
-					leaf.view.updateDisplay();
+					leaf.view.numWords = currentWords;
+					leaf.view.numCharacters = currentCharacters;
+					leaf.view.numSentences = currentSentences;
+					leaf.view.numParagraphs = currentParagraphs;
+
+					leaf.view.numSelectedWords = selectedWords;
+					leaf.view.numSelectedCharacters = selectedCharacters;
+					leaf.view.numSelectedSentences = selectedSentences;
+					leaf.view.numSelectedParagraphs = selectedParagraphs;
+
+					leaf.view.arrCurrentWordFrequency = currentWordFrequency;
+
 				}
+				leaf.view.updateDisplay();
+				this.processing = 0;
 			}
 		});
 	}
@@ -122,6 +224,10 @@ export default class tlfFileInfo extends Plugin {
 	}
 
 	async deactivateView() {
+		if ( this.intervalTimer ) {
+			window.clearInterval(this.intervalTimer);
+			this.intervalTimer = null;
+		}
 		this.app.workspace.detachLeavesOfType(VIEW_TYPE);
 	}
 
@@ -137,6 +243,8 @@ export default class tlfFileInfo extends Plugin {
 			this.activateView();
 		}		
 	}
+
+
 
 	async activateView() {
 		this.app.workspace.detachLeavesOfType(VIEW_TYPE);

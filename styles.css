@@ -38,7 +38,17 @@
 	border: none;
 	margin: 0px;
 	padding: 0em;
+	padding-left: 2em;
 	font-size: 0.7em;
+}
+
+.tlfFileInfoValueNumber {
+	border: none;
+	margin: 0px;
+	padding: 0em;
+	padding-left: 3em;
+	font-size: 0.7em;
+	text-align: right;
 }
 
 .tlfFileInfoButton {
@@ -49,4 +59,14 @@
 	color: var(--text-muted);
 	height: 2em;
 	text-align: left;
+}
+
+.tlfFileInfoTextArea {
+	margin: 0px;
+	padding: 0.2em;
+	font-size: 0.7em;
+	color: var(--text-muted);
+	line-height: 1.2;
+	width: 100%;
+	height: 8em;
 }

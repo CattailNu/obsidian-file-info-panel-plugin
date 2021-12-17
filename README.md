@@ -1,12 +1,12 @@
 # obsidian-file-info-panel-plugin
 
-This plugin for [Obsidian](https://obsidian.md/) creates a small File Info view that displays the active file's date created, date modified, file size, and links to open the file in its native application and to open the file's folder.
+This plugin for [Obsidian](https://obsidian.md/) creates a File Information view that displays the active file's date created, date modified, file size, and links to open the file in its native application and to open the file's folder.  It also has writing statistics (character, word, sentence, and paragraph counts) and a word frequency analysis.
 
 ## Usage
 
-After enabling the plugin in the settings menu, you should see the info button appear in the left navigation panel.  This will toggle the file info view.
+After enabling the plugin in the settings menu, you should see the info button appear in the left navigation panel.  This will toggle the File Info Panel view.
 
-The File Info settings allows you to set which file information is displayed.
+The File Info Panel settings allows you to set which file information is displayed.
 
 ## Features
 
@@ -20,6 +20,12 @@ The File Info settings allows you to set which file information is displayed.
 >
 > 21 days ago
 
+- Writing statistics:
+	- Character, word, sentence, and paragraph counts.
+	- Selected text's character, word, sentence, and paragraph counts.
+	- Estimated page count based on your provided words per page.
+	- Word frequency analysis.  Optional split into two lists based on your provided regex.
+
 ## Settings
 
 - **Show Date Created**: Display the date and time the file was created.
@@ -27,12 +33,36 @@ The File Info settings allows you to set which file information is displayed.
 - **Show File Size**: Display the human readable file size.
 - **Show File**: Display the file name as a link to open the file in its default application.
 - **Show Folder**: Display the file's folder as a link to open that folder.
+- **Show Character Count**: Display a character count for md and txt files.
+- **Show Word Count**: Display a word count for md and txt files.
+- **Show Sentence Count**: Display a sentence count for md and txt files.
+- **Show Paragraph Count**: Display a paragraph count for md and txt files. Does not include empty lines.
+
+- **Show Page Count Estimate**: Display a sentence count for md and txt files.
+- **Words Per Page**: Enter the estimated words per page to use in the page count calculation.
+
+- **Show a Word Frequency Report**: Display a sorted list of unique words and how often these were used.
+- **Filter Word Frequency Report**: Split the report into two lists using the provided regex.
+- **Filter Regex**: Customize which words are split out of the main report. [Regex Assistance](https://cattail.nu/obsidian/filePluginRegexHelper.html)
+
+- **Show Selected Character Count**: Display a character count for selected text.
+- **Show Selected Word Count**: Display a word count for for selected text.
+- **Show Selected Sentence Count**: Display a sentence count for selected text.
+- **Show Selected Paragraph Count**: Display a paragraph count for selected text. Does not include empty lines.
 
 ## Screenshots
 
-<img src="https://cattail.nu/obsidian/panel_screenshot.png" alt="File Info Panel Info view" width="200">
+<img src="https://cattail.nu/obsidian/screenshot_110.png" alt="File Info Panel Info view" height="400">
+
+[Enlarge Above](https://cattail.nu/obsidian/screenshot_110.png)
 
 <img src="https://cattail.nu/obsidian/sidebar_icon_screenshot.png" alt="File Info Panel Info button" width="200">
+
+<img src="https://cattail.nu/obsidian/setting01_110.png" alt="File Info Panel Info setting 1 of 4" width="400">
+<img src="https://cattail.nu/obsidian/setting02_110.png" alt="File Info Panel Info setting 2 of 4" width="400">
+<img src="https://cattail.nu/obsidian/setting03_110.png" alt="File Info Panel Info setting 3 of 4" width="400">
+<img src="https://cattail.nu/obsidian/setting04_110.png" alt="File Info Panel Info setting 4 of 4" width="400">
+
 
 ## Customization
 
@@ -45,23 +75,23 @@ The following CSS Variables can be overridden in your `obsidian.css` file.
 .tlfFileInfoTable {
 	display: table;
 	border: none;
-	margin:0em;
-	padding:0em;
+	margin: 0em;
+	padding: 0em;
 }
 
 .tlfFileInfoRow {
 	display: table-row;
 	border: none;
 	margin: 0em;
-	padding:0em;
+	padding: 0em;
 }
 
 .tlfFileInfoCell {
 	display: table-cell;
 	border: none;
 	margin: 0px;
-	margin-left:0.5em;
-	padding:0em;
+	margin-left: 0.5em;
+	padding: 0em;
 	text-align: left;
 	white-space: nowrap;
 }
@@ -69,8 +99,8 @@ The following CSS Variables can be overridden in your `obsidian.css` file.
 .tlfFileInfoLabel {
 	border: none;
 	margin: 0px;
-	margin-right:0.2em;
-	padding:0em;
+	margin-right: 0.2em;
+	padding: 0em;
 	font-size: 0.7em;
 	color: var(--text-muted);
 }
@@ -78,23 +108,42 @@ The following CSS Variables can be overridden in your `obsidian.css` file.
 .tlfFileInfoValue {
 	border: none;
 	margin: 0px;
-	padding:0em;
+	padding: 0em;
+	padding-left: 2em;
 	font-size: 0.7em;
 }
 
+.tlfFileInfoValueNumber {
+	border: none;
+	margin: 0px;
+	padding: 0em;
+	padding-left: 3em;
+	font-size: 0.7em;
+	text-align: right;
+}
+
 .tlfFileInfoButton {
-	border: 1px solid var(--background-modifier-border);
-	color: var(--text-muted);
 	border: none;
 	margin: 0px;
 	padding: 0px;
 	font-size: 0.7em;
+	color: var(--text-muted);
 	height: 2em;
 	text-align: left;
 }
+
+.tlfFileInfoTextArea {
+	margin: 0px;
+	padding: 0.2em;
+	font-size: 0.7em;
+	color: var(--text-muted);
+	line-height: 1.2;
+	width: 100%;
+	height: 8em;
+}
 ```
 
-<img src="https://cattail.nu/obsidian/css_customization_variables.png" alt="File Info Panel CSS Customization Variables" width="200">
+<img src="https://cattail.nu/obsidian/css_customization_variables.png" alt="File Info Panel CSS Customization Variables" width="400">
 
 ## Compatibility
 
