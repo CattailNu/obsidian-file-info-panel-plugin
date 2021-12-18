@@ -47,10 +47,10 @@ export class tlfItemView extends ItemView {
 		container.empty();
 
 		if ( this.plugin.settings.showFile ) {
-			const tlfTable2 = container.createEl("div", { cls: "tlfFileInfoTable" } );
+			const tlfTable2 = container.createEl("div", { cls: "tlfFileInfoTable100" } );
 			const row5 = tlfTable2.createEl("div", { cls: "tlfFileInfoRow" } );
 
-				const cell5 = row5.createEl("div","tlfFileInfoCell");
+				const cell5 = row5.createEl("div","tlfFileInfoCellButton");
 				const bFile = cell5.createEl("button", { text: this.strFile, cls: "tlfFileInfoButton" });
 			var iv = this;
 			bFile.addEventListener("click", async (e) => {
@@ -64,7 +64,7 @@ export class tlfItemView extends ItemView {
 			const row2 = tlfTable.createEl("div", { cls: "tlfFileInfoRow" } );
 
 				const cell3 = row2.createEl("div","tlfFileInfoCell");
-				cell3.createEl("div", { text: "Modified On", cls: "tlfFileInfoLabel" });
+				cell3.createEl("div", { text: "Modified", cls: "tlfFileInfoLabel" });
 
 				const cell4 = row2.createEl("div","tlfFileInfoCell");
 				cell4.createEl("div", { text: this.strModified, cls: "tlfFileInfoValue" });
@@ -75,7 +75,7 @@ export class tlfItemView extends ItemView {
 			const row1 = tlfTable.createEl("div", { cls: "tlfFileInfoRow" } );
 
 				const cell1 = row1.createEl("div","tlfFileInfoCell");
-				cell1.createEl("div", { text: "Created On", cls: "tlfFileInfoLabel" });
+				cell1.createEl("div", { text: "Created", cls: "tlfFileInfoLabel" });
 
 				const cell2 = row1.createEl("div","tlfFileInfoCell");
 				cell2.createEl("div", { text: this.strCreated, cls: "tlfFileInfoValue" });
@@ -96,10 +96,10 @@ export class tlfItemView extends ItemView {
 		}
 
 		if ( this.plugin.settings.showFolder ) {
-			const tlfTable3 = container.createEl("div", { cls: "tlfFileInfoTable" } );
+			const tlfTable3 = container.createEl("div", { cls: "tlfFileInfoTable100" } );
 			const row6 = tlfTable3.createEl("div", { cls: "tlfFileInfoRow" } );
 
-				const cell6 = row6.createEl("div","tlfFileInfoCell");
+				const cell6 = row6.createEl("div","tlfFileInfoCellButton");
 				const bFolder = cell6.createEl("button", { text: this.strFolder, cls: "tlfFileInfoButton" });
 
 			var iv = this;
@@ -221,7 +221,7 @@ export class tlfItemView extends ItemView {
 				}
 			}
 
-			const tlfTable6 = container.createEl("div", { cls: "tlfFileInfoTable" });
+			const tlfTable6 = container.createEl("div", { cls: "tlfFileInfoTable100" });
 				const row13 = tlfTable6.createEl("div", { cls: "tlfFileInfoRow" } );
 					const cell23 = row13.createEl("div","tlfFileInfoCell");
 					cell23.createEl("div", { text: "Word Frequency", cls: "tlfFileInfoLabel" });
@@ -230,7 +230,7 @@ export class tlfItemView extends ItemView {
 					const cell24 = row14.createEl("div","tlfFileInfoCell");
 					cell24.createEl("textarea", { text: report, cls: "tlfFileInfoTextArea" });
 
-				if ( this.plugin.settings.filterFrequency && (this.plugin.settings.filterRegex.length > 0) ) {
+				if ( this.plugin.settings.filterFrequency && (this.plugin.settings.filterRegex.length > 0) && this.plugin.settings.showFilteredWords ) {
 
 					const row15 = tlfTable6.createEl("div", { cls: "tlfFileInfoRow" } );
 						const cell25 = row15.createEl("div","tlfFileInfoCell");

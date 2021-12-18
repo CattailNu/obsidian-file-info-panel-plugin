@@ -1,6 +1,7 @@
 /* obsidian-file-info-panel-plugin */
 /* https://github.com/CattailNu/obsidian-file-info-panel-plugin */
 
+/* all other tables */
 .tlfFileInfoTable {
 	display: table;
 	border: none;
@@ -8,12 +9,23 @@
 	padding: 0em;
 }
 
+/* the word filter report lists, file open/folder open buttons */
+.tlfFileInfoTable100 {
+	display: table;
+	border: none;
+	margin: 0em;
+	padding: 0em;
+	width: 100%;
+}
+
+
 .tlfFileInfoRow {
 	display: table-row;
 	border: none;
 	margin: 0em;
 	padding: 0em;
 }
+
 
 .tlfFileInfoCell {
 	display: table-cell;
@@ -25,6 +37,7 @@
 	white-space: nowrap;
 }
 
+
 .tlfFileInfoLabel {
 	border: none;
 	margin: 0px;
@@ -34,12 +47,21 @@
 	color: var(--text-muted);
 }
 
+/*
+	To wrap date text automatically,
+	replace "white-space: nowrap;" below in tlfFileInfoValue with:
+	white-space: normal;
+	word-break: break-word;
+*/
+
 .tlfFileInfoValue {
 	border: none;
 	margin: 0px;
 	padding: 0em;
 	padding-left: 2em;
 	font-size: 0.7em;
+	height: auto;
+	white-space: nowrap;
 }
 
 .tlfFileInfoValueNumber {
@@ -51,6 +73,22 @@
 	text-align: right;
 }
 
+.tlfFileInfoCellButton {
+	display: table-cell;
+	border: none;
+	margin: 0px;
+	margin-left: 0.5em;
+	padding: 0em;
+	text-align: left;
+}
+
+/*
+	To wrap text in file name / folder name automatically,
+	replace "white-space: nowrap;" below in tlfFileInfoButton with:
+	white-space: normal;
+	word-break: break-all;
+*/
+
 .tlfFileInfoButton {
 	border: none;
 	margin: 0px;
@@ -59,6 +97,10 @@
 	color: var(--text-muted);
 	height: 2em;
 	text-align: left;
+	width:100%;
+	max-width:100%;
+	height:auto;
+	white-space: nowrap;
 }
 
 .tlfFileInfoTextArea {

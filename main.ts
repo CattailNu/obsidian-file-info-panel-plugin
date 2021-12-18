@@ -1,6 +1,12 @@
 /* obsidian-file-info-panel-plugin */
 /* https://github.com/CattailNu/obsidian-file-info-panel-plugin */
 
+/* Tested On:
+Windows 11, Obsidian v0.12.19  (ChaiQi#5160)
+Mac OS X 10.12.6 Obsidian  v0.12.19 (T.L. Ford)
+Windows 11, yes, (P.Rose#7066)
+Android, fails (P.Rose#7066)
+
 /* T. L. Ford */
 /* https://www.Cattail.Nu */
 
@@ -77,6 +83,15 @@ export default class tlfFileInfo extends Plugin {
 		this.registerEvent(this.app.workspace.on('active-leaf-change', () => {
 			this.requeryStats();
 		}));
+
+/*
+    this.registerCodeMirror((cm: CodeMirror.Editor) => {
+      cm.on("cursorActivity", (cm: CodeMirror.Editor) =>
+        this.barManager.cursorActivity(cm)
+      );
+    });
+*/
+
 
 	} // END async onload() {
 
@@ -174,10 +189,11 @@ export default class tlfFileInfo extends Plugin {
 					}
 
 					var cDate = moment.unix(file.stat.ctime/1000);
-					var cString = cDate.format('llll');
+					var cString = cDate.format(this.settings.momentDateFormat);
+					
 
 					var mDate = moment.unix(file.stat.mtime/1000);
-					var mString = mDate.format('llll');
+					var mString = mDate.format(this.settings.momentDateFormat);
 
 					leaf.view.isText = isText;
 					leaf.view.strCreated = cString;

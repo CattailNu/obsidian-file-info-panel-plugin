@@ -14,6 +14,7 @@ import { INTERVAL_MINUTES } from "./tlfConstants";
 export interface tlfInterfaceSettings {
 	showCreated: boolean;
 	showModified: boolean;
+	momentDateFormat: string;
 	showFile: boolean;
 	showFolder: boolean;
 	showSize: boolean;
@@ -35,12 +36,14 @@ export interface tlfInterfaceSettings {
 
 	filterFrequency: boolean;
 	filterRegex: string;
+	showFilteredWords: boolean;
 
 }
 
 export const tlfDefaultSettings = Object.freeze({
 	showCreated: true,
 	showModified: true,
+	momentDateFormat: "llll",
 	showFile: true,
 	showFolder: true,
 	showSize: true,
@@ -61,6 +64,7 @@ export const tlfDefaultSettings = Object.freeze({
 	showWordFrequency: false,
 	filterFrequency: false,
 	filterRegex: COMMON_ENGLISH_WORDS,
+	showFilteredWords: false,
 
 });
 
@@ -103,6 +107,28 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				});
 		});
+
+		new Setting(containerEl)
+			.setName("Date Format")
+			.setDesc(
+				createFragment((frag) => {
+					frag.appendText("Date format using moment.js token syntax. ");
+					frag.appendText("The human readable text will always be added. ");
+					frag.appendText("Use a single space to skip the first line formatted date and only see the human readable line.");
+					frag.createEl('br');
+					frag.createEl('a', {text: "https://momentjs.com/docs/#/displaying/", href: "https://momentjs.com/docs/#/displaying/"});
+				})
+			)
+			.addText((cb: TextAreaComponent) => {
+				cb.setPlaceholder("llll");
+				cb.setValue(this.plugin.settings.momentDateFormat);
+				cb.onChange((value: string) => {
+					this.plugin.settings.momentDateFormat = value;
+					this.plugin.saveSettings();
+				});
+		});
+
+
 
 		new Setting(containerEl)
 			.setName("Show File Size")
@@ -258,6 +284,17 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 				cb.onChange((value: string) => {
 					this.plugin.settings.filterRegex = value;
 					this.plugin.saveSettings();
+				});
+		});
+
+		new Setting(containerEl)
+			.setName("Show Filtered Words")
+			.setDesc("Show the words filtered by the above regex.")
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.showFilteredWords);
+				cb.onChange(async (value: boolean) => {
+					this.plugin.settings.showFilteredWords = value;
+					await this.plugin.saveSettings();
 				});
 		});
 

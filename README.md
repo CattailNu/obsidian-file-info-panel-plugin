@@ -58,20 +58,22 @@ The File Info Panel settings allows you to set which file information is display
 
 <img src="https://cattail.nu/obsidian/sidebar_icon_screenshot.png" alt="File Info Panel Info button" width="200">
 
-<img src="https://cattail.nu/obsidian/setting01_110.png" alt="File Info Panel Info setting 1 of 4" width="400">
+<img src="https://cattail.nu/obsidian/setting01_120.png" alt="File Info Panel Info setting 1 of 4" width="400">
 <img src="https://cattail.nu/obsidian/setting02_110.png" alt="File Info Panel Info setting 2 of 4" width="400">
-<img src="https://cattail.nu/obsidian/setting03_110.png" alt="File Info Panel Info setting 3 of 4" width="400">
+<img src="https://cattail.nu/obsidian/setting03_120.png" alt="File Info Panel Info setting 3 of 4" width="400">
 <img src="https://cattail.nu/obsidian/setting04_110.png" alt="File Info Panel Info setting 4 of 4" width="400">
 
 
 ## Customization
 
 The following CSS Variables can be overridden in your `obsidian.css` file.
+See the notes for wrapping dates/file/folders in the css comments.
 
 ```css
 /* obsidian-file-info-panel-plugin */
 /* https://github.com/CattailNu/obsidian-file-info-panel-plugin */
 
+/* all other tables */
 .tlfFileInfoTable {
 	display: table;
 	border: none;
@@ -79,12 +81,23 @@ The following CSS Variables can be overridden in your `obsidian.css` file.
 	padding: 0em;
 }
 
+/* the word filter report lists, file open/folder open buttons */
+.tlfFileInfoTable100 {
+	display: table;
+	border: none;
+	margin: 0em;
+	padding: 0em;
+	width: 100%;
+}
+
+
 .tlfFileInfoRow {
 	display: table-row;
 	border: none;
 	margin: 0em;
 	padding: 0em;
 }
+
 
 .tlfFileInfoCell {
 	display: table-cell;
@@ -96,6 +109,7 @@ The following CSS Variables can be overridden in your `obsidian.css` file.
 	white-space: nowrap;
 }
 
+
 .tlfFileInfoLabel {
 	border: none;
 	margin: 0px;
@@ -105,12 +119,21 @@ The following CSS Variables can be overridden in your `obsidian.css` file.
 	color: var(--text-muted);
 }
 
+/*
+	To wrap date text automatically,
+	replace "white-space: nowrap;" below in tlfFileInfoValue with:
+	white-space: normal;
+	word-break: break-word;
+*/
+
 .tlfFileInfoValue {
 	border: none;
 	margin: 0px;
 	padding: 0em;
 	padding-left: 2em;
 	font-size: 0.7em;
+	height: auto;
+	white-space: nowrap;
 }
 
 .tlfFileInfoValueNumber {
@@ -122,6 +145,22 @@ The following CSS Variables can be overridden in your `obsidian.css` file.
 	text-align: right;
 }
 
+.tlfFileInfoCellButton {
+	display: table-cell;
+	border: none;
+	margin: 0px;
+	margin-left: 0.5em;
+	padding: 0em;
+	text-align: left;
+}
+
+/*
+	To wrap text in file name / folder name automatically,
+	replace "white-space: nowrap;" below in tlfFileInfoButton with:
+	white-space: normal;
+	word-break: break-all;
+*/
+
 .tlfFileInfoButton {
 	border: none;
 	margin: 0px;
@@ -130,6 +169,10 @@ The following CSS Variables can be overridden in your `obsidian.css` file.
 	color: var(--text-muted);
 	height: 2em;
 	text-align: left;
+	width:100%;
+	max-width:100%;
+	height:auto;
+	white-space: nowrap;
 }
 
 .tlfFileInfoTextArea {
@@ -147,7 +190,9 @@ The following CSS Variables can be overridden in your `obsidian.css` file.
 
 ## Compatibility
 
-`obsidian-file-info-panel-plugin` has been tested on Mac, Obsidian v0.12.19.
+`obsidian-file-info-panel-plugin` has been tested on Mac and Windows 11, Obsidian v0.12.19.
+
+Android does not work (open issue).
 
 ## Say Thanks 🙏
 
