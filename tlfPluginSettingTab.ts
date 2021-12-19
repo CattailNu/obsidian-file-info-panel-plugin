@@ -17,6 +17,7 @@ export interface tlfInterfaceSettings {
 	momentDateFormat: string;
 	showFile: boolean;
 	showFolder: boolean;
+	showRelativeFolder: boolean;
 	showSize: boolean;
 
 	showCurrentWords: boolean;
@@ -46,6 +47,7 @@ export const tlfDefaultSettings = Object.freeze({
 	momentDateFormat: "llll",
 	showFile: true,
 	showFolder: true,
+	showRelativeFolder: false,
 	showSize: true,
 
 	showCurrentWords: true,
@@ -162,6 +164,18 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				});
 		});
+
+		new Setting(containerEl)
+			.setName("Show Folder as Relative Path")
+			.setDesc("Show the folder as relative to the vault rather than the file system. Clicking will still open to the file system.")
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.showRelativeFolder);
+				cb.onChange(async (value: boolean) => {
+					this.plugin.settings.showRelativeFolder = value;
+					await this.plugin.saveSettings();
+				});
+		});
+
 
 		containerEl.createEl('h4', {text: 'Document Statistics'});
 

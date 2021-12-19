@@ -20,6 +20,7 @@ export class tlfItemView extends ItemView {
 	strFolder = "";
 	strSize = "";
 	strFullPath = "";
+	strRelativePath = "";
 
 	numWords = 0;
 	numCharacters = 0;
@@ -100,8 +101,14 @@ export class tlfItemView extends ItemView {
 			const row6 = tlfTable3.createEl("div", { cls: "tlfFileInfoRow" } );
 
 				const cell6 = row6.createEl("div","tlfFileInfoCellButton");
-				const bFolder = cell6.createEl("button", { text: this.strFolder, cls: "tlfFileInfoButton" });
-
+				var bFolder;
+				if ( this.plugin.settings.showRelativeFolder ) {
+					var rPath = this.strRelativePath;
+					if ( rPath.slice(-1) != '/' ) { rPath += '/'; }
+					bFolder = cell6.createEl("button", { text: rPath, cls: "tlfFileInfoButton" });
+				} else {
+					bFolder = cell6.createEl("button", { text: this.strFolder, cls: "tlfFileInfoButton" });
+				}
 			var iv = this;
 
 			bFolder.addEventListener("click", async (e) => {

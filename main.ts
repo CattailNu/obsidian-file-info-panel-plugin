@@ -7,16 +7,20 @@ Mac OS X 10.12.6 Obsidian  v0.12.19 (T.L. Ford)
 Windows 11, yes, (P.Rose#7066)
 Android, fails (P.Rose#7066)
 
+/* Notes for dev
+https://github.com/TfTHacker/obsidian42-brat/blob/main/help/developers.md
+Versioning: https://semver.org
+*/
+
 /* T. L. Ford */
 /* https://www.Cattail.Nu */
 
 import { App, ItemView, WorkspaceLeaf, MetadataCache, Plugin, MarkdownView, PluginSettingTab, Setting, moment } from 'obsidian';
-
 import { tlfPluginSettingTab } from "./tlfPluginSettingTab";
-
 import { VIEW_TYPE, INTERVAL_MINUTES } from "./tlfConstants";
-
 import { getCharacterCount, getSentenceCount, getWordCount, getParagraphCount, getWordFrequencyArray, cleanComments } from "./stats";
+import type CodeMirror from "codemirror";
+import * as path from 'path';
 
 
 import {
@@ -35,11 +39,11 @@ export default class tlfFileInfo extends Plugin {
 	settings: tlfPluginSettingTab;
 
 	processing = 0;
-	intervalTimer = null;
+	// intervalTimer = null;
 
 	async onload() {
 		await this.loadSettings();
-		// console.clear();
+//		console.clear();
 
 		var a = this.app;
 		var p = this;
@@ -84,20 +88,29 @@ export default class tlfFileInfo extends Plugin {
 			this.requeryStats();
 		}));
 
-/*
-    this.registerCodeMirror((cm: CodeMirror.Editor) => {
-      cm.on("cursorActivity", (cm: CodeMirror.Editor) =>
-        this.barManager.cursorActivity(cm)
-      );
-    });
-*/
+		this.registerCodeMirror((cm: CodeMirror.Editor) => {
+			cm.on("cursorActivity", (cm: CodeMirror.Editor) => {
+				this.requeryStats();
+			//	console.log(cm.getValue());
+			}
+			);
+		});
 
 
 	} // END async onload() {
 
 
 	async requeryStats() {
+
 		var file = this.app.workspace.getActiveFile();
+		var data = "";
+		var isText = 0;
+
+		if ( file && (file.extension === "md" || file.extension === "txt") ) {
+			isText = 1;
+			//data = await file.vault.cachedRead(file);
+			data = await this.app.vault.cachedRead(file);
+		}
 
 		this.app.workspace.getLeavesOfType(VIEW_TYPE).forEach(async (leaf) => {
 			if (leaf.view instanceof tlfItemView) {
@@ -132,12 +145,8 @@ export default class tlfFileInfo extends Plugin {
 					var selectedSentences = 0;
 					var selectedParagraphs = 0;
 					var currentWordFrequency = [];
-					var isText = 0;
 
 					if (file.extension === "md" || file.extension === "txt") {
-						isText = 1;
-						var data = "";
-						data = await file.vault.cachedRead(file);
 
 						if ( data ) {
 							if ( this.settings.showCurrentWords ) { currentWords = getWordCount(data); }
@@ -153,6 +162,7 @@ export default class tlfFileInfo extends Plugin {
 							this.settings.showSelectedSentences ||
 							this.settings.showSelectedParagraphs
 						) {
+/*
 							if ( ! this.intervalTimer ) {
 								this.intervalTimer = window.setInterval(() => {
 									this.requeryStats();
@@ -160,6 +170,7 @@ export default class tlfFileInfo extends Plugin {
 								, INTERVAL_MINUTES * 60 * 1000);
 								this.registerInterval(this.interval);
 							}
+*/
 							var selectedData = "";
 
 							const v = this.app.workspace.getActiveViewOfType(MarkdownView);
@@ -176,14 +187,14 @@ export default class tlfFileInfo extends Plugin {
 									}
 								}
 							}
-						} else {
+						} /* else {
 							// they have changed settings to turn these off
 							// so kill it.
 							if ( this.intervalTimer ) {
 								window.clearInterval(this.intervalTimer);
 								this.intervalTimer = null;
-							}						
-						}
+							}					
+						} */
 						
 
 					}
@@ -202,9 +213,16 @@ export default class tlfFileInfo extends Plugin {
 					leaf.view.strModified = mString;
 					leaf.view.strModifiedFromNow = mDate.fromNow();
 
-					leaf.view.strFile = file.name;
-					leaf.view.strFolder = file.vault.adapter.basePath;
-					leaf.view.strFullPath = file.vault.adapter.basePath + file.vault.adapter.path.sep + file.name;
+					// commented lines work on mac and windows. Trying alternative for android.
+					// leaf.view.strFile = file.name;
+					// leaf.view.strFolder = file.vault.adapter.basePath;
+					// leaf.view.strFullPath = file.vault.adapter.basePath + file.vault.adapter.path.sep + file.name;
+
+					leaf.view.strFile = file.path;
+					leaf.view.strRelativePath = file.parent.path;
+					leaf.view.strFolder = path.join(this.app.vault.adapter.basePath, leaf.view.strRelativePath);
+					leaf.view.strFullPath = path.join(leaf.view.strFolder, leaf.view.strFile);
+
 					leaf.view.strSize = formatBytes(file.stat.size,1);
 
 					leaf.view.numWords = currentWords;
@@ -240,10 +258,12 @@ export default class tlfFileInfo extends Plugin {
 	}
 
 	async deactivateView() {
+/*
 		if ( this.intervalTimer ) {
 			window.clearInterval(this.intervalTimer);
 			this.intervalTimer = null;
 		}
+*/
 		this.app.workspace.detachLeavesOfType(VIEW_TYPE);
 	}
 

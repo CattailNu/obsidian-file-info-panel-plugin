@@ -33,6 +33,7 @@ The File Info Panel settings allows you to set which file information is display
 - **Show File Size**: Display the human readable file size.
 - **Show File**: Display the file name as a link to open the file in its default application.
 - **Show Folder**: Display the file's folder as a link to open that folder.
+- **Show Folder as Relative Path**: Display the file's vault-relative location rather than the full path.
 - **Show Character Count**: Display a character count for md and txt files.
 - **Show Word Count**: Display a word count for md and txt files.
 - **Show Sentence Count**: Display a sentence count for md and txt files.
@@ -44,6 +45,7 @@ The File Info Panel settings allows you to set which file information is display
 - **Show a Word Frequency Report**: Display a sorted list of unique words and how often these were used.
 - **Filter Word Frequency Report**: Split the report into two lists using the provided regex.
 - **Filter Regex**: Customize which words are split out of the main report. [Regex Assistance](https://cattail.nu/obsidian/filePluginRegexHelper.html)
+- **Show Filtered Words**: Show the words filtered by the above regex.
 
 - **Show Selected Character Count**: Display a character count for selected text.
 - **Show Selected Word Count**: Display a word count for for selected text.
