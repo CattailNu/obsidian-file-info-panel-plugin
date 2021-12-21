@@ -251,7 +251,10 @@ export default class tlfFileInfo extends Plugin {
 
 	onunload() {
 		this.app.workspace.detachLeavesOfType(VIEW_TYPE);
-	}
+		this.app.workspace.iterateCodeMirrors(cm => {
+		  cm.off('change', this.onChange);
+		});
+    }
 
 	async loadSettings() {
 		this.settings = Object.assign({}, tlfDefaultSettings, await this.loadData());

@@ -1,0 +1,16 @@
+https://github.com/chetachiezikeuzor/Get-Info-Plugin
+You should totally collaborate with @chetachiezikeuzor since both of your plugins are so similar.
+
+https://github.com/CattailNu/obsidian-file-info-panel-plugin/blob/84c4756a8ccb0f79b7995b27a2a232e87a85ba50/main.ts#L23
+Don't import path because that will make your plugin only work on the desktop app. Instead, just join the path using / and then apply normalizePath from obsidian.
+
+https://github.com/CattailNu/obsidian-file-info-panel-plugin/blob/84c4756a8ccb0f79b7995b27a2a232e87a85ba50/main.ts#L91
+Use the new editor-changed event on Workspace instead of this one, which will not work with the new editor.
+
+https://github.com/CattailNu/obsidian-file-info-panel-plugin/blob/84c4756a8ccb0f79b7995b27a2a232e87a85ba50/main.ts#L103
+You register a lot of events throughout the app and call this function repeatedly. I would highly suggest debouncing this function so that you don't end up re-computing statistics hundreds of times per second and causing unnecessary CPU usage.
+
+This is especially true since you're calling updateDisplay every time which re-builds the entire DOM of your view.
+
+https://github.com/CattailNu/obsidian-file-info-panel-plugin/blob/84c4756a8ccb0f79b7995b27a2a232e87a85ba50/main.ts#L72
+I don't think you need to hook up to all of these events. Some of them are especially noisy when some things happens on the file system, for example, renaming a file could cause modification of dozens of other files due to links updating. You shouldn't be updating statistics dozens of time when this happens. In fact, you are probably OK to use MetadataCache's resolved event to replace all the vault events except delete. In either case, you should debounce your update function as well.
