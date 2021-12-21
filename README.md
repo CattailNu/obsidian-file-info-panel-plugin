@@ -202,6 +202,7 @@ Android does NOT work.  No iOS testing (feedback requested).
 - Removed reference to timer in the settings as it is no longer used.
 - Changed to say "No file." when there is no file.
 - Fixed a display bug when file is dragged out of the vault folder while it is open in Obsidian.
+- Changed all settings to be on by default.
 
 ### 1.2.0
 - Added setting option to change date diplay format.
