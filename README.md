@@ -194,7 +194,39 @@ See the notes for wrapping dates/file/folders in the css comments.
 
 `obsidian-file-info-panel-plugin` has been tested on Mac and Windows 11, Obsidian v0.12.19.
 
-Android does not work (open issue).
+Android does NOT work.  No iOS testing (feedback requested).
+
+## Change Log
+
+### 1.2.1
+- Removed reference to timer in the settings as it is no longer used.
+- Changed to say "No file." when there is no file.
+- Fixed a display bug when file is dragged out of the vault folder while it is open in Obsidian.
+
+### 1.2.0
+- Added setting option to change date diplay format.
+- Updated view/css to allow better fine-tuning, specifically, the ability to wrap text for file/folder names and filter lists.
+- Added setting option to display the folder path as relative to vault.
+- Adjusted word frequency textbox display.
+- Added setting option to show/hide filtered words.
+- Changed the selected text algorithm from a timer to an event, improving responsiveness.
+- Changed the document path code to try and fix android issues.
+
+### 1.1.0
+Addition of document statistics.
+- Character count
+- Word count
+- Sentence count
+- Paragraph count
+- Estimated pages
+- Word frequency report with regex filter
+- Selected characters count
+- Selected Words count
+- Selected Sentences count
+
+### 1.0.1
+
+Initial release:  File name link, date modified, date created, full folder path link.
 
 ## Say Thanks 🙏
 

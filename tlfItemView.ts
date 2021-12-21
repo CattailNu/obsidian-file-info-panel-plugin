@@ -47,6 +47,11 @@ export class tlfItemView extends ItemView {
 		const container = this.containerEl.children[1];
 		container.empty();
 
+		if ( this.strFile == "" ) {
+			container.createEl("p", { text: "No current file.", cls: "tlfFileInfoLabel" });
+			return;
+		}
+
 		if ( this.plugin.settings.showFile ) {
 			const tlfTable2 = container.createEl("div", { cls: "tlfFileInfoTable100" } );
 			const row5 = tlfTable2.createEl("div", { cls: "tlfFileInfoRow" } );
@@ -54,6 +59,7 @@ export class tlfItemView extends ItemView {
 				const cell5 = row5.createEl("div","tlfFileInfoCellButton");
 				const bFile = cell5.createEl("button", { text: this.strFile, cls: "tlfFileInfoButton" });
 			var iv = this;
+
 			bFile.addEventListener("click", async (e) => {
 				app.openWithDefaultApp(iv.strFile);
 			});
@@ -241,6 +247,7 @@ export class tlfItemView extends ItemView {
 
 					const row15 = tlfTable6.createEl("div", { cls: "tlfFileInfoRow" } );
 						const cell25 = row15.createEl("div","tlfFileInfoCell");
+						cell25.createEl("div", { text: "Filtered by Setting:", cls: "tlfFileInfoLabel" });
 						cell25.createEl("textarea", { text: reportRegex, cls: "tlfFileInfoTextArea" });
 				}		
 		}

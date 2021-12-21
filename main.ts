@@ -219,7 +219,11 @@ export default class tlfFileInfo extends Plugin {
 					// leaf.view.strFullPath = file.vault.adapter.basePath + file.vault.adapter.path.sep + file.name;
 
 					leaf.view.strFile = file.path;
-					leaf.view.strRelativePath = file.parent.path;
+					if ( file.parent ) {
+						leaf.view.strRelativePath = file.parent.path;
+					} else {
+						leaf.view.strRelativePath = file.path;
+					}
 					leaf.view.strFolder = path.join(this.app.vault.adapter.basePath, leaf.view.strRelativePath);
 					leaf.view.strFullPath = path.join(leaf.view.strFolder, leaf.view.strFile);
 

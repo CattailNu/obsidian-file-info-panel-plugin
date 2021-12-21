@@ -8,7 +8,7 @@ import { App, PluginSettingTab, Setting } from "obsidian";
 
 import { COMMON_ENGLISH_WORDS } from "./tlfConstants";
 
-import { INTERVAL_MINUTES } from "./tlfConstants";
+//import { INTERVAL_MINUTES } from "./tlfConstants";
 
 
 export interface tlfInterfaceSettings {
@@ -58,15 +58,15 @@ export const tlfDefaultSettings = Object.freeze({
 	showCurrentPages: true,
 	wordsPerPage: 300,
 
-	showSelectedWords: false,
-	showSelectedCharacters: false,
-	showSelectedSentences: false,
-	showSelectedParagraphs: false,
+	showSelectedWords: true,
+	showSelectedCharacters: true,
+	showSelectedSentences: true,
+	showSelectedParagraphs: true,
 	
-	showWordFrequency: false,
-	filterFrequency: false,
+	showWordFrequency: true,
+	filterFrequency: true,
 	filterRegex: COMMON_ENGLISH_WORDS,
-	showFilteredWords: false,
+	showFilteredWords: true,
 
 });
 
@@ -313,9 +313,6 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		containerEl.createEl('h4', {text: 'Document Selected Text Statistics'});
-
-		containerEl.createEl('p', {text: "Selected statistics update every " + INTERVAL_MINUTES + " minutes. Don't leave these on unless you are using it." });
-
 
 		containerEl.createEl('p', {text: "The following settings only work for the currently open document and only for md and txt files. The extra calculations may affect Obsidian's performance, depending on the size of your documents and your system. Toggle the File Info Panel visibility if you change these settings."});
 

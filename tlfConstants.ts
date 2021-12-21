@@ -6,7 +6,7 @@
 
 export const VIEW_TYPE = "tlfItemView";
 
-export const INTERVAL_MINUTES = 0.3;
+// export const INTERVAL_MINUTES = 0.3;
 
 
 /*
