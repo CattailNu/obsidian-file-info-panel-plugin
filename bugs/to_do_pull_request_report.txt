@@ -1,3 +1,6 @@
+https://github.com/obsidianmd/obsidian-releases/pull/686
+--------------------------------------------------------
+
 https://github.com/chetachiezikeuzor/Get-Info-Plugin
 You should totally collaborate with @chetachiezikeuzor since both of your plugins are so similar.
 
