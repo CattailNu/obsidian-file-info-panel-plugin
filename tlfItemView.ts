@@ -16,10 +16,11 @@ export class tlfItemView extends ItemView {
 	strCreatedFromNow = "";
 	strModified = "";
 	strModifiedFromNow = "";
-	strFile = "";
-	strFolder = "";
+	strDisplayFile = "";
+	strDisplayFolder = "";
+	strFileOpen = "";
+
 	strSize = "";
-	strFullPath = "";
 	strRelativePath = "";
 
 	numWords = 0;
@@ -32,7 +33,7 @@ export class tlfItemView extends ItemView {
 	arrCurrentWordFrequency = [];
 
 	numSelectedWords = 0;
-	numSelectCharacters = 0;
+	numSelectedCharacters = 0;
 	numSelectedSentences = 0;
 	numSelectedParagraphs = 0;
 	
@@ -57,11 +58,12 @@ export class tlfItemView extends ItemView {
 			const row5 = tlfTable2.createEl("div", { cls: "tlfFileInfoRow" } );
 
 				const cell5 = row5.createEl("div","tlfFileInfoCellButton");
-				const bFile = cell5.createEl("button", { text: this.strFile, cls: "tlfFileInfoButton" });
+				const bFile = cell5.createEl("button", { text: this.strDisplayFile, cls: "tlfFileInfoButton" });
 			var iv = this;
 
+
 			bFile.addEventListener("click", async (e) => {
-				app.openWithDefaultApp(iv.strFile);
+				app.openWithDefaultApp(iv.strFileOpen);
 			});
 		}
 
@@ -113,12 +115,11 @@ export class tlfItemView extends ItemView {
 					if ( rPath.slice(-1) != '/' ) { rPath += '/'; }
 					bFolder = cell6.createEl("button", { text: rPath, cls: "tlfFileInfoButton" });
 				} else {
-					bFolder = cell6.createEl("button", { text: this.strFolder, cls: "tlfFileInfoButton" });
+					bFolder = cell6.createEl("button", { text: this.strDisplayFolder, cls: "tlfFileInfoButton" });
 				}
 			var iv = this;
-
 			bFolder.addEventListener("click", async (e) => {
-				app.showInFolder(iv.strFile);
+				app.showInFolder(iv.strFileOpen);
 			});
 		}
 

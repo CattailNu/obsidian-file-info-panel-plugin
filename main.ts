@@ -15,17 +15,14 @@ Versioning: https://semver.org
 /* T. L. Ford */
 /* https://www.Cattail.Nu */
 
-import { App, ItemView, WorkspaceLeaf, MetadataCache, Plugin, MarkdownView, PluginSettingTab, Setting, moment } from 'obsidian';
-import { tlfPluginSettingTab } from "./tlfPluginSettingTab";
-import { VIEW_TYPE, INTERVAL_MINUTES } from "./tlfConstants";
+import { App, ItemView, WorkspaceLeaf, MetadataCache, Plugin, MarkdownView, PluginSettingTab, Setting, moment, normalizePath } from 'obsidian';
+import { VIEW_TYPE } from "./tlfConstants";
 import { getCharacterCount, getSentenceCount, getWordCount, getParagraphCount, getWordFrequencyArray, cleanComments } from "./stats";
 import type CodeMirror from "codemirror";
-import * as path from 'path';
 
 
 import {
 	tlfPluginSettingTab,
-	tlfInterfaceSettings,
 	tlfDefaultSettings
 } from "./tlfPluginSettingTab";
 
@@ -213,19 +210,23 @@ export default class tlfFileInfo extends Plugin {
 					leaf.view.strModified = mString;
 					leaf.view.strModifiedFromNow = mDate.fromNow();
 
-					// commented lines work on mac and windows. Trying alternative for android.
-					// leaf.view.strFile = file.name;
-					// leaf.view.strFolder = file.vault.adapter.basePath;
-					// leaf.view.strFullPath = file.vault.adapter.basePath + file.vault.adapter.path.sep + file.name;
 
-					leaf.view.strFile = file.path;
+					leaf.view.strDisplayFile = file.name;
+
 					if ( file.parent ) {
 						leaf.view.strRelativePath = file.parent.path;
 					} else {
 						leaf.view.strRelativePath = file.path;
 					}
-					leaf.view.strFolder = path.join(this.app.vault.adapter.basePath, leaf.view.strRelativePath);
-					leaf.view.strFullPath = path.join(leaf.view.strFolder, leaf.view.strFile);
+
+					// app.openWithDefaultApp(iv.strFileOpen);
+					// app.showInFolder(iv.strFileOpen);
+					leaf.view.strFileOpen = normalizePath(leaf.view.strRelativePath + "/" + file.name);
+
+					leaf.view.strDisplayFolder = normalizePath(this.app.vault.adapter.basePath + "/" + leaf.view.strRelativePath);
+
+
+// **************************************
 
 					leaf.view.strSize = formatBytes(file.stat.size,1);
 
