@@ -6,6 +6,9 @@
 
 import { App, PluginSettingTab, Setting } from "obsidian";
 
+import tlfFileInfo from "./main";
+
+
 import { COMMON_ENGLISH_WORDS } from "./tlfConstants";
 
 //import { INTERVAL_MINUTES } from "./tlfConstants";

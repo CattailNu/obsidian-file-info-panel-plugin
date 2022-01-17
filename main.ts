@@ -1,11 +1,8 @@
 /* obsidian-file-info-panel-plugin */
 /* https://github.com/CattailNu/obsidian-file-info-panel-plugin */
 
-/* Tested On:
-Windows 11, Obsidian v0.12.19  (ChaiQi#5160)
-Mac OS X 10.12.6 Obsidian  v0.12.19 (T.L. Ford)
-Windows 11, yes, (P.Rose#7066)
-Android, fails (P.Rose#7066)
+/* Notes:
+Selected text counts are not working.
 
 /* Notes for dev
 https://github.com/TfTHacker/obsidian42-brat/blob/main/help/developers.md
@@ -18,8 +15,10 @@ Versioning: https://semver.org
 import { App, ItemView, WorkspaceLeaf, MetadataCache, Plugin, MarkdownView, PluginSettingTab, Setting, moment, normalizePath } from 'obsidian';
 import { VIEW_TYPE } from "./tlfConstants";
 import { getCharacterCount, getSentenceCount, getWordCount, getParagraphCount, getWordFrequencyArray, cleanComments } from "./stats";
-import type CodeMirror from "codemirror";
-
+//import type CodeMirror from "codemirror";
+//import { EditorView, ViewUpdate } from '@codemirror/view';
+//import { EditorState, Text } from '@codemirror/state';
+import * as CodeMirror from 'codemirror';
 
 import {
 	tlfPluginSettingTab,
@@ -35,7 +34,6 @@ import { formatBytes } from "./tlfUtilities";
 export default class tlfFileInfo extends Plugin {
 	settings: tlfPluginSettingTab;
 
-	processing = 0;
 	// intervalTimer = null;
 
 	async onload() {
@@ -65,26 +63,52 @@ export default class tlfFileInfo extends Plugin {
 		});
 
 		this.addSettingTab(new tlfPluginSettingTab(this.app, this));
-
-		this.registerEvent(this.app.vault.on('create', () => {
+/*
+		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
 			this.requeryStats();
-		}));
+			console.log('click', evt);
+		});
+*/		
+		// needed for when a new file is created with a keystroke and is renamed
+		// otherwise, the info panel can't find the file correctly.
 		this.registerEvent(this.app.vault.on('rename', () => {
 			this.requeryStats();
 		}));
-		this.registerEvent(this.app.vault.on('modify', () => {
+
+		// needed for when a new file is created with a keystroke and is not renamed
+		this.registerEvent(this.app.vault.on('create', () => {
 			this.requeryStats();
 		}));
+
+		
+		this.registerEvent(this.app.workspace.on('file-open', () => {
+			this.requeryStats();
+		}));
+
+		// needed if user selects the 3-dot menu and deletes
 		this.registerEvent(this.app.vault.on('delete', () => {
 			this.requeryStats();
 		}));
-		this.registerEvent(this.app.vault.on('file-open', () => {
-			this.requeryStats();
-		}));
+
+		// needed for multi-pane support when users change between them
 		this.registerEvent(this.app.workspace.on('active-leaf-change', () => {
 			this.requeryStats();
 		}));
 
+		// fires on auto-save
+		this.registerEvent(this.app.vault.on('modify', () => {
+			this.requeryStats();
+		}));
+
+/*
+		// fires every keystroke (too often)
+		this.registerEvent(this.app.workspace.on('editor-change', () => {
+			this.requeryStats();
+		}));
+*/		
+
+/*
+// no longer working with live preview
 		this.registerCodeMirror((cm: CodeMirror.Editor) => {
 			cm.on("cursorActivity", (cm: CodeMirror.Editor) => {
 				this.requeryStats();
@@ -92,7 +116,7 @@ export default class tlfFileInfo extends Plugin {
 			}
 			);
 		});
-
+*/
 
 	} // END async onload() {
 
@@ -111,14 +135,15 @@ export default class tlfFileInfo extends Plugin {
 
 		this.app.workspace.getLeavesOfType(VIEW_TYPE).forEach(async (leaf) => {
 			if (leaf.view instanceof tlfItemView) {
-				if (this.processing) return;
-				this.processing = 1;
 
 				if (! file ) {
+/*
+// Not the correct thing to do (comment out the defaults), but should keep the
+// mobile apps from ditching the stats because the current "view" isn't a file, but a plugin panel
 					leaf.view.strCreated = "";
 					leaf.view.strModified = "";
-					leaf.view.strFile = "";
-					leaf.view.strFolder = "";
+//					leaf.view.strFile = "";
+//					leaf.view.strFolder = "";
 					leaf.view.strSize = "";
 					leaf.view.numWords = 0;
 					leaf.view.numCharacters = 0;
@@ -130,7 +155,7 @@ export default class tlfFileInfo extends Plugin {
 					leaf.view.numSelectedSentences = 0;
 					leaf.view.arrCurrentWordFrequency = [];
 					leaf.view.isText = 0;
-
+*/
 				} else {
 
 					var currentWords = 0;
@@ -225,9 +250,6 @@ export default class tlfFileInfo extends Plugin {
 
 					leaf.view.strDisplayFolder = normalizePath(this.app.vault.adapter.basePath + "/" + leaf.view.strRelativePath);
 
-
-// **************************************
-
 					leaf.view.strSize = formatBytes(file.stat.size,1);
 
 					leaf.view.numWords = currentWords;
@@ -244,7 +266,6 @@ export default class tlfFileInfo extends Plugin {
 
 				}
 				leaf.view.updateDisplay();
-				this.processing = 0;
 			}
 		});
 	}

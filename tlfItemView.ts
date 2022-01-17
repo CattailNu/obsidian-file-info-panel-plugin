@@ -4,7 +4,7 @@
 /* T. L. Ford */
 /* https://www.Cattail.Nu */
 
-import { App, Command, ItemView, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Command, ItemView, Plugin, PluginSettingTab, Setting, WorkspaceLeaf } from 'obsidian';
 
 import { VIEW_TYPE } from "./tlfConstants";
 
@@ -48,7 +48,7 @@ export class tlfItemView extends ItemView {
 		const container = this.containerEl.children[1];
 		container.empty();
 
-		if ( this.strFile == "" ) {
+		if ( this.strDisplayFile == "" ) {
 			container.createEl("p", { text: "No current file.", cls: "tlfFileInfoLabel" });
 			return;
 		}
@@ -187,14 +187,15 @@ export class tlfItemView extends ItemView {
 					var wordsPerPage = Number(this.plugin.settings.wordsPerPage);
 					var currentWords = this.numWords;
 
-					var estPages = 1;
+					var estPages = "";
 					if ( (typeof wordsPerPage !== "number" || isNaN(wordsPerPage)) ||
 						(typeof currentWords !== "number" || isNaN(currentWords)) ) {
 						estPages = "Words Per Page Setting Is Not Valid";
 					} else {
 						if ( wordsPerPage < 1 ) { wordsPerPage = 1 };
-						estPages = this.numWords / wordsPerPage;
-						estPages = estPages.toFixed(2);
+						let eP = Number(this.numWords) / wordsPerPage;
+						eP = Number(eP.toFixed(2));
+						estPages = ""+eP+"";
 					}
 
 					const cell22 = row12.createEl("div","tlfFileInfoCell");

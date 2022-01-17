@@ -192,9 +192,11 @@ See the notes for wrapping dates/file/folders in the css comments.
 
 ## Compatibility
 
+ACTIVE BUG: Selected text counts do not work since the live-preview update.
+
 `obsidian-file-info-panel-plugin` has been tested on Mac and Windows 11, Obsidian v0.12.19.
 
-Android does NOT work.  No iOS testing (feedback requested).
+Android and iOS do NOT work.
 
 ## Change Log
 

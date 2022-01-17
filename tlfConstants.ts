@@ -6,9 +6,6 @@
 
 export const VIEW_TYPE = "tlfItemView";
 
-// export const INTERVAL_MINUTES = 0.3;
-
-
 /*
 https://github.com/lukeleppan/better-word-count
 */

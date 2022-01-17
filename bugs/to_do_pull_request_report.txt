@@ -12,9 +12,12 @@ Don't import path because that will make your plugin only work on the desktop ap
 
 https://github.com/CattailNu/obsidian-file-info-panel-plugin/blob/84c4756a8ccb0f79b7995b27a2a232e87a85ba50/main.ts#L91
 Use the new editor-changed event on Workspace instead of this one, which will not work with the new editor.
+* The modified is sufficient.  Editor-changed does every keystroke.
 
 https://github.com/CattailNu/obsidian-file-info-panel-plugin/blob/84c4756a8ccb0f79b7995b27a2a232e87a85ba50/main.ts#L103
 You register a lot of events throughout the app and call this function repeatedly. I would highly suggest debouncing this function so that you don't end up re-computing statistics hundreds of times per second and causing unnecessary CPU usage.
+
+
 
 This is especially true since you're calling updateDisplay every time which re-builds the entire DOM of your view.
 
