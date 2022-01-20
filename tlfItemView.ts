@@ -42,6 +42,7 @@ export class tlfItemView extends ItemView {
 	constructor(leaf: WorkspaceLeaf, app: App, plugin: tlfFileInfo) {
 		super(leaf, app, plugin);
 		this.plugin = plugin;
+		this.app = app;
 	}
 
 	updateDisplay() {
@@ -63,7 +64,7 @@ export class tlfItemView extends ItemView {
 
 
 			bFile.addEventListener("click", async (e) => {
-				app.openWithDefaultApp(iv.strFileOpen);
+				this.app.openWithDefaultApp(iv.strFileOpen);
 			});
 		}
 
@@ -119,7 +120,7 @@ export class tlfItemView extends ItemView {
 				}
 			var iv = this;
 			bFolder.addEventListener("click", async (e) => {
-				app.showInFolder(iv.strFileOpen);
+				this.app.showInFolder(iv.strFileOpen);
 			});
 		}
 

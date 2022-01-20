@@ -3,6 +3,7 @@
 
 /* Notes:
 Selected text counts are not working.
+Event structure is not right and needs debouncing
 
 /* Notes for dev
 https://github.com/TfTHacker/obsidian42-brat/blob/main/help/developers.md
@@ -35,6 +36,7 @@ export default class tlfFileInfo extends Plugin {
 	settings: tlfPluginSettingTab;
 
 	// intervalTimer = null;
+
 
 	async onload() {
 		await this.loadSettings();
@@ -100,23 +102,18 @@ export default class tlfFileInfo extends Plugin {
 			this.requeryStats();
 		}));
 
-/*
-		// fires every keystroke (too often)
+		// fires every keystroke, but is behind a letter
 		this.registerEvent(this.app.workspace.on('editor-change', () => {
+			console.log("editor-change");
 			this.requeryStats();
 		}));
-*/		
 
-/*
-// no longer working with live preview
-		this.registerCodeMirror((cm: CodeMirror.Editor) => {
-			cm.on("cursorActivity", (cm: CodeMirror.Editor) => {
-				this.requeryStats();
-			//	console.log(cm.getValue());
-			}
-			);
+		// to grab selection counts, not functioning
+		this.registerDomEvent(window, 'selectionchange', (event) => {
+			console.log("selectionchange");
+			this.requeryStats();
 		});
-*/
+
 
 	} // END async onload() {
 
