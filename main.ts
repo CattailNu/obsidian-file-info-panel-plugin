@@ -153,6 +153,8 @@ export default class tlfFileInfo extends Plugin {
 								var selectedData = "";
 	
 								const v = this.app.workspace.getActiveViewOfType(MarkdownView);
+								if ( v ) {
+								if ( v.file ) {
 								if ( v.file == file ) {
 									if ("editor" in v) {
 										if ( v.getMode() === "source" ) {
@@ -165,7 +167,7 @@ export default class tlfFileInfo extends Plugin {
 											}
 										}
 									}
-								}
+								} } }
 							} /* else {
 								// they have changed settings to turn these off
 								// so kill it.
@@ -238,7 +240,6 @@ export default class tlfFileInfo extends Plugin {
 			requeryStats();
 		}));
 
-		
 		this.registerEvent(this.app.workspace.on('file-open', () => {
 			requeryStats();
 		}));

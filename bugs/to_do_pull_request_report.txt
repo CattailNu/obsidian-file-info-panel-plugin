@@ -3,23 +3,38 @@ https://github.com/obsidianmd/obsidian-releases/pull/686
 
 https://github.com/chetachiezikeuzor/Get-Info-Plugin
 You should totally collaborate with @chetachiezikeuzor since both of your plugins are so similar.
-* Scope creep has pushed it to no longer similar.
 
+Scope creep has pushed it to no longer similar. (added word usage statistics, selection).
 https://github.com/CattailNu/obsidian-file-info-panel-plugin/blob/84c4756a8ccb0f79b7995b27a2a232e87a85ba50/main.ts#L23
 Don't import path because that will make your plugin only work on the desktop app. Instead, just join the path using / and then apply normalizePath from obsidian.
-* Changed.  It still does not seem to be working on the mobile versions.
 
+Changed.
 https://github.com/CattailNu/obsidian-file-info-panel-plugin/blob/84c4756a8ccb0f79b7995b27a2a232e87a85ba50/main.ts#L91
 Use the new editor-changed event on Workspace instead of this one, which will not work with the new editor.
-* The modified is sufficient.  Editor-changed does every keystroke.
 
+Added.
 https://github.com/CattailNu/obsidian-file-info-panel-plugin/blob/84c4756a8ccb0f79b7995b27a2a232e87a85ba50/main.ts#L103
 You register a lot of events throughout the app and call this function repeatedly. I would highly suggest debouncing this function so that you don't end up re-computing statistics hundreds of times per second and causing unnecessary CPU usage.
-* Debounced.  I think...
 
+Debounced. I think...
 This is especially true since you're calling updateDisplay every time which re-builds the entire DOM of your view.
 
 https://github.com/CattailNu/obsidian-file-info-panel-plugin/blob/84c4756a8ccb0f79b7995b27a2a232e87a85ba50/main.ts#L72
 I don't think you need to hook up to all of these events. Some of them are especially noisy when some things happens on the file system, for example, renaming a file could cause modification of dozens of other files due to links updating. You shouldn't be updating statistics dozens of time when this happens. In fact, you are probably OK to use MetadataCache's resolved event to replace all the vault events except delete. In either case, you should debounce your update function as well.
-* This should only be grabbing the currently open file's statistics, not rolling through all files in the vault. I'm hoping this is a non-issue.
+
+This should only be grabbing the currently open file's statistics, not rolling through all files in the vault. I'm hoping this is a non-issue.
+
+--------------------------
+https://github.com/obsidianmd/obsidian-releases/pull/686#issuecomment-1019297564
+
+https://github.com/CattailNu/obsidian-file-info-panel-plugin/blob/fde733ea2b44d17786223ec220579d2c5963ae2f/main.ts#L156
+Should check for null here. (I know in theory it shouldn't because you're checking the active file, but there may still be ways this can get you null, for example, other plugins replacing .md views)
+Done.
+
+This should only be grabbing the currently open file's statistics, not rolling through all files in the vault. I'm hoping this is a non-issue.
+Yeah, now that you have it debounced it should be fine. I was just saying that this event is fired for every file change, even if it's not the active file. You should test if the file passed in from the event is the active file being looked at, so you don't re-compute when any random file is changed in the vault. This can happen for a variety of reasons like using Sync, or using another app on the same vault. (Ex: Using vscode to run a global search & replace).
+
+I understand you aren't computing for every file - I'm saying that you're re-computing the current file even if a different file was changed.
+
+Ideally you only need to trigger a re-compute when the specific file you have open in view has changed.
 
