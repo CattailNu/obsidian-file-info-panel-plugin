@@ -29,7 +29,7 @@ https://github.com/obsidianmd/obsidian-releases/pull/686#issuecomment-1019297564
 
 https://github.com/CattailNu/obsidian-file-info-panel-plugin/blob/fde733ea2b44d17786223ec220579d2c5963ae2f/main.ts#L156
 Should check for null here. (I know in theory it shouldn't because you're checking the active file, but there may still be ways this can get you null, for example, other plugins replacing .md views)
-Done.
+* Done.
 
 This should only be grabbing the currently open file's statistics, not rolling through all files in the vault. I'm hoping this is a non-issue.
 Yeah, now that you have it debounced it should be fine. I was just saying that this event is fired for every file change, even if it's not the active file. You should test if the file passed in from the event is the active file being looked at, so you don't re-compute when any random file is changed in the vault. This can happen for a variety of reasons like using Sync, or using another app on the same vault. (Ex: Using vscode to run a global search & replace).
@@ -37,4 +37,4 @@ Yeah, now that you have it debounced it should be fine. I was just saying that t
 I understand you aren't computing for every file - I'm saying that you're re-computing the current file even if a different file was changed.
 
 Ideally you only need to trigger a re-compute when the specific file you have open in view has changed.
-
+* I hadn't realized it worked like this.  Thank you for the explanation!  Changed.

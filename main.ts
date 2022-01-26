@@ -231,36 +231,45 @@ export default class tlfFileInfo extends Plugin {
 
 		// needed for when a new file is created with a keystroke and is renamed
 		// otherwise, the info panel can't find the file correctly.
-		this.registerEvent(this.app.vault.on('rename', () => {
-			requeryStats();
+		this.registerEvent(this.app.vault.on('rename', (abstractFile, oldFilePath) => {
+			if( this.app.workspace.getActiveFile().path === abstractFile.path ) {
+				requeryStats();
+			}
 		}));
 
 		// needed for when a new file is created with a keystroke and is not renamed
-		this.registerEvent(this.app.vault.on('create', () => {
-			requeryStats();
+		this.registerEvent(this.app.vault.on('create', (abstractFile) => {
+			if( this.app.workspace.getActiveFile().path === abstractFile.path ) {
+				requeryStats();
+			}
 		}));
 
-		this.registerEvent(this.app.workspace.on('file-open', () => {
+		this.registerEvent(this.app.workspace.on('file-open', ( aFile? ) => {
 			requeryStats();
 		}));
 
 		// needed if user selects the 3-dot menu and deletes
-		this.registerEvent(this.app.vault.on('delete', () => {
-			requeryStats();
+		this.registerEvent(this.app.vault.on('delete', (abstractFile) => {
+			if( this.app.workspace.getActiveFile().path === abstractFile.path ) {
+				requeryStats();
+			}
 		}));
 
 		// needed for multi-pane support when users change between them
-		this.registerEvent(this.app.workspace.on('active-leaf-change', () => {
+		this.registerEvent(this.app.workspace.on('active-leaf-change', ( aLeaf? ) => {
 			requeryStats();
 		}));
 
+
 		// fires on auto-save
-		this.registerEvent(this.app.vault.on('modify', () => {
-			requeryStats();
+		this.registerEvent(this.app.vault.on('modify', (abstractFile) => {
+			if( this.app.workspace.getActiveFile().path === abstractFile.path ) {
+				requeryStats();
+			}
 		}));
 
 		// fires every keystroke, but is behind a letter
-		this.registerEvent(this.app.workspace.on('editor-change', () => {
+		this.registerEvent(this.app.workspace.on('editor-change', (editor, markdownView) => {
 			requeryStats();
 		}));
 
