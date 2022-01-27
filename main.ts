@@ -232,6 +232,7 @@ export default class tlfFileInfo extends Plugin {
 		// needed for when a new file is created with a keystroke and is renamed
 		// otherwise, the info panel can't find the file correctly.
 		this.registerEvent(this.app.vault.on('rename', (abstractFile, oldFilePath) => {
+			if ( ! this.app.workspace.getActiveFile() ) return;
 			if( this.app.workspace.getActiveFile().path === abstractFile.path ) {
 				requeryStats();
 			}
@@ -239,6 +240,7 @@ export default class tlfFileInfo extends Plugin {
 
 		// needed for when a new file is created with a keystroke and is not renamed
 		this.registerEvent(this.app.vault.on('create', (abstractFile) => {
+			if ( ! this.app.workspace.getActiveFile() ) return;
 			if( this.app.workspace.getActiveFile().path === abstractFile.path ) {
 				requeryStats();
 			}
@@ -250,6 +252,7 @@ export default class tlfFileInfo extends Plugin {
 
 		// needed if user selects the 3-dot menu and deletes
 		this.registerEvent(this.app.vault.on('delete', (abstractFile) => {
+			if ( ! this.app.workspace.getActiveFile() ) return;
 			if( this.app.workspace.getActiveFile().path === abstractFile.path ) {
 				requeryStats();
 			}
@@ -263,6 +266,7 @@ export default class tlfFileInfo extends Plugin {
 
 		// fires on auto-save
 		this.registerEvent(this.app.vault.on('modify', (abstractFile) => {
+			if ( ! this.app.workspace.getActiveFile() ) return;
 			if( this.app.workspace.getActiveFile().path === abstractFile.path ) {
 				requeryStats();
 			}
