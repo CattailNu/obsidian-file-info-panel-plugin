@@ -17,6 +17,7 @@ The File Info Panel settings allows you to set which file information is display
 - Dates include human-readable "from now" text.  Example:
 
 > Mon, Nov 22, 2021 7:59 PM
+> 
 > 21 days ago
 
 - Writing statistics:
