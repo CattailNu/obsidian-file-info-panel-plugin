@@ -211,6 +211,9 @@ Featured: Make your own dreamcatcher graphics:
 
 ## Change Log
 
+### 1.2.5
+- Bug fix (Issue #8).
+
 ### 1.2.4
 - Mobile versions working.
 - Selected text counts functioning again (broke with new version of Obsidian).
