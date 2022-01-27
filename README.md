@@ -17,7 +17,6 @@ The File Info Panel settings allows you to set which file information is display
 - Dates include human-readable "from now" text.  Example:
 
 > Mon, Nov 22, 2021 7:59 PM
->
 > 21 days ago
 
 - Writing statistics:
@@ -25,6 +24,10 @@ The File Info Panel settings allows you to set which file information is display
 	- Selected text's character, word, sentence, and paragraph counts.
 	- Estimated page count based on your provided words per page.
 	- Word frequency analysis.  Optional split into two lists based on your provided regex.
+
+## Compatibility
+
+`obsidian-file-info-panel-plugin` has been tested on Mac and Windows 11, Obsidian v0.12.19.  Mobile versions appear to be working.
 
 ## Settings
 
@@ -190,15 +193,28 @@ See the notes for wrapping dates/file/folders in the css comments.
 
 <img src="https://cattail.nu/obsidian/css_customization_variables.png" alt="File Info Panel CSS Customization Variables" width="400">
 
-## Compatibility
 
-ACTIVE BUG: Selected text counts do not work since the live-preview update.
+## Say Thanks 🙏
 
-`obsidian-file-info-panel-plugin` has been tested on Mac and Windows 11, Obsidian v0.12.19.
+Consider reading and sharing one of my books (available through Amazon).  There are fantasy, science fiction, novelty art books, non-fiction, thriller, and even a biography.
 
-Android and iOS do NOT work.
+[https://www.amazon.com/T.-L.-Ford/e/B0034Q6Q2S](https://www.amazon.com/T.-L.-Ford/e/B0034Q6Q2S)
+
+You'll also find a bunch of free content and writing/art tools on my personal website.
+
+[https://www.Cattail.Nu](https://www.Cattail.Nu)
+
+Featured: Make your own dreamcatcher graphics:
+[http://www.cattail.nu/journal_tools/page_dreamcatcher_art.html](http://www.cattail.nu/journal_tools/page_dreamcatcher_art.html)
+
 
 ## Change Log
+
+### 1.2.4
+- Mobile versions working.
+- Selected text counts functioning again (broke with new version of Obsidian).
+- Optimization.
+- Potential bug fixes.
 
 ### 1.2.1
 - Removed reference to timer in the settings as it is no longer used.
@@ -231,15 +247,4 @@ Addition of document statistics.
 
 Initial release:  File name link, date modified, date created, full folder path link.
 
-## Say Thanks 🙏
 
-Consider reading and sharing one of my books (available through Amazon).  There are fantasy, science fiction, novelty art books, non-fiction, thriller, and even a biography.
-
-[https://www.amazon.com/T.-L.-Ford/e/B0034Q6Q2S](https://www.amazon.com/T.-L.-Ford/e/B0034Q6Q2S)
-
-You'll also find a bunch of free content and writing/art tools on my personal website.
-
-[https://www.Cattail.Nu](https://www.Cattail.Nu)
-
-Featured: Make your own dreamcatcher graphics:
-[http://www.cattail.nu/journal_tools/page_dreamcatcher_art.html](http://www.cattail.nu/journal_tools/page_dreamcatcher_art.html)
