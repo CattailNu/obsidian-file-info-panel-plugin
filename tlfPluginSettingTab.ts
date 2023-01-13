@@ -2,7 +2,10 @@
 /* https://github.com/CattailNu/obsidian-file-info-panel-plugin */
 
 /* T. L. Ford */
-/* https://www.Cattail.Nu */
+/* https://www.Cattail.Nu
+
+20230112 updated to include url frequency
+ */
 
 import { App, PluginSettingTab, Setting } from "obsidian";
 
@@ -37,6 +40,8 @@ export interface tlfInterfaceSettings {
 	showSelectedParagraphs: boolean;
 	
 	showWordFrequency: boolean;
+	showURLFrequency: boolean;
+	excludeURLFromWordCounts: boolean;
 
 	filterFrequency: boolean;
 	filterRegex: string;
@@ -67,6 +72,9 @@ export const tlfDefaultSettings = Object.freeze({
 	showSelectedParagraphs: true,
 	
 	showWordFrequency: true,
+	showURLFrequency: true,
+	excludeURLFromWordCounts: true,
+
 	filterFrequency: true,
 	filterRegex: COMMON_ENGLISH_WORDS,
 	showFilteredWords: true,
@@ -315,6 +323,29 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 				});
 		});
 
+		new Setting(containerEl)
+			.setName("Show a URL and File Frequency Report")
+			.setDesc("Show a grid of URLs and Files you mention by frequency.")
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.showURLFrequency);
+				cb.onChange(async (value: boolean) => {
+					this.plugin.settings.showURLFrequency = value;
+					await this.plugin.saveSettings();
+				});
+		});
+
+		new Setting(containerEl)
+			.setName("Exclude URLs and Files From Word Frequency Report and Word Counts")
+			.setDesc("Exclude URLs and Files from the word-count parsers. Does not apply to characters, sentences, paragraphs, or pages.")
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.excludeURLFromWordCounts);
+				cb.onChange(async (value: boolean) => {
+					this.plugin.settings.excludeURLFromWordCounts = value;
+					await this.plugin.saveSettings();
+				});
+		});
+
+
 		containerEl.createEl('h4', {text: 'Document Selected Text Statistics'});
 
 		containerEl.createEl('p', {text: "The following settings only work for the currently open document and only for md and txt files. The extra calculations may affect Obsidian's performance, depending on the size of your documents and your system. Toggle the File Info Panel visibility if you change these settings."});
@@ -364,5 +395,6 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 
-	}
-}
+
+	} // display():
+} // tlfPluginSettingTab

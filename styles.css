@@ -1,5 +1,10 @@
 /* obsidian-file-info-panel-plugin */
-/* https://github.com/CattailNu/obsidian-file-info-panel-plugin */
+/* https://github.com/CattailNu/obsidian-file-info-panel-plugin
+
+
+20230112 updated to fix button styles that broke
+
+ */
 
 /* all other tables */
 .tlfFileInfoTable {
@@ -23,6 +28,7 @@
 	display: table-row;
 	border: none;
 	margin: 0em;
+	margin-bottom: 0.3em;
 	padding: 0em;
 }
 
@@ -37,12 +43,25 @@
 	white-space: nowrap;
 }
 
+/* applies to word/url footnote */
+.tlfFileInfoParagraph {
+	display: table-cell;
+	border: none;
+	margin: 0px;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+	padding: 0em;
+	text-align: left;
+	white-space: normal;
+	word-break: break-word;
+}
+
 
 .tlfFileInfoLabel {
 	border: none;
 	margin: 0px;
-	margin-right: 0.2em;
-	padding: 0em;
+	margin-right: 0.3em;
+	padding: 0.3em;
 	font-size: 0.7em;
 	color: var(--text-muted);
 }
@@ -59,7 +78,10 @@
 	margin: 0px;
 	padding: 0em;
 	padding-left: 2em;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
 	font-size: 0.7em;
+	font-weight: bold;
 	height: auto;
 	white-space: nowrap;
 }
@@ -69,6 +91,7 @@
 	margin: 0px;
 	padding: 0em;
 	padding-left: 3em;
+	font-weight: bold;
 	font-size: 0.7em;
 	text-align: right;
 }
@@ -77,9 +100,10 @@
 	display: table-cell;
 	border: none;
 	margin: 0px;
+	padding: 0.3em;
+	text-align: left;
 	margin-left: 0.5em;
 	padding: 0em;
-	text-align: left;
 }
 
 /*
@@ -92,20 +116,27 @@
 .tlfFileInfoButton {
 	border: none;
 	margin: 0px;
+	margin-bottom:0.3em;
+	margin-top:0.3em;
 	padding: 0px;
+	text-align: left;
 	font-size: 0.7em;
+	background:none;
 	color: var(--text-muted);
 	height: 2em;
-	text-align: left;
 	width:100%;
 	max-width:100%;
 	height:auto;
 	white-space: nowrap;
 }
 
+.tlfFileInfoButton:Hover {
+	font-weight: bold;
+}
+
 .tlfFileInfoTextArea {
 	margin: 0px;
-	padding: 0.2em;
+	padding: 0.3em;
 	font-size: 0.7em;
 	color: var(--text-muted);
 	line-height: 1.2;

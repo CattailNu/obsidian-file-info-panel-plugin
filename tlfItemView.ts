@@ -2,7 +2,13 @@
 /* https://github.com/CattailNu/obsidian-file-info-panel-plugin */
 
 /* T. L. Ford */
-/* https://www.Cattail.Nu */
+/* https://www.Cattail.Nu 
+
+20230112 updated to show image width/height
+20230112 updated to fix button styles that broke
+20230112 updated to include url frequency array
+
+*/
 
 import { App, Command, ItemView, Plugin, PluginSettingTab, Setting, WorkspaceLeaf } from 'obsidian';
 
@@ -11,6 +17,7 @@ import { VIEW_TYPE } from "./tlfConstants";
 export class tlfItemView extends ItemView {
 
 	isText = 0;
+	isImage = 0;
 
 	strCreated = "";
 	strCreatedFromNow = "";
@@ -27,10 +34,13 @@ export class tlfItemView extends ItemView {
 	numCharacters = 0;
 	numSentences = 0;
 	numParagraphs = 0;
+	numImageWidth = 0;
+	numImageHeight = 0;
 
 	// numPages calculated on setting.
 
 	arrCurrentWordFrequency = [];
+	arrCurrentURLFrequency = [];
 
 	numSelectedWords = 0;
 	numSelectedCharacters = 0;
@@ -38,6 +48,12 @@ export class tlfItemView extends ItemView {
 	numSelectedParagraphs = 0;
 	
 	plugin: tlfFileInfo;
+
+	updateImageData(imageWidth, imageHeight) {
+		this.numImageWidth = imageWidth;
+		this.numImageHeight = imageHeight;
+		this.updateDisplay();
+	}
 
 	constructor(leaf: WorkspaceLeaf, app: App, plugin: tlfFileInfo) {
 		super(leaf, app, plugin);
@@ -58,10 +74,9 @@ export class tlfItemView extends ItemView {
 			const tlfTable2 = container.createEl("div", { cls: "tlfFileInfoTable100" } );
 			const row5 = tlfTable2.createEl("div", { cls: "tlfFileInfoRow" } );
 
-				const cell5 = row5.createEl("div","tlfFileInfoCellButton");
-				const bFile = cell5.createEl("button", { text: this.strDisplayFile, cls: "tlfFileInfoButton" });
+				const cell5 = row5.createEl("div","tlfFileInfoCell");
+				const bFile = cell5.createEl("p", { text: this.strDisplayFile, cls: "tlfFileInfoButton" });
 			var iv = this;
-
 
 			bFile.addEventListener("click", async (e) => {
 				this.app.openWithDefaultApp(iv.strFileOpen);
@@ -94,6 +109,25 @@ export class tlfItemView extends ItemView {
 			});
 		}
 
+		if ( this.isImage ) {
+			const row18 = tlfTable.createEl("div", { cls: "tlfFileInfoRow" } );
+
+				const cell30 = row18.createEl("div","tlfFileInfoCell");
+				cell30.createEl("div", { text: "Image Width", cls: "tlfFileInfoLabel" });
+
+				const cell31 = row18.createEl("div","tlfFileInfoCell");
+				cell31.createEl("div", { text: String(this.numImageWidth), cls: "tlfFileInfoValue" });
+
+			const row19 = tlfTable.createEl("div", { cls: "tlfFileInfoRow" } );
+
+				const cell32 = row19.createEl("div","tlfFileInfoCell");
+				cell32.createEl("div", { text: "Image Height", cls: "tlfFileInfoLabel" });
+
+				const cell33 = row19.createEl("div","tlfFileInfoCell");
+				cell33.createEl("div", { text: String(this.numImageHeight), cls: "tlfFileInfoValue" });
+
+		}
+
 
 		if ( this.plugin.settings.showSize ) {
 			const row4 = tlfTable.createEl("div", { cls: "tlfFileInfoRow" } );
@@ -114,9 +148,9 @@ export class tlfItemView extends ItemView {
 				if ( this.plugin.settings.showRelativeFolder ) {
 					var rPath = this.strRelativePath;
 					if ( rPath.slice(-1) != '/' ) { rPath += '/'; }
-					bFolder = cell6.createEl("button", { text: rPath, cls: "tlfFileInfoButton" });
+					bFolder = cell6.createEl("p", { text: rPath, cls: "tlfFileInfoButton" });
 				} else {
-					bFolder = cell6.createEl("button", { text: this.strDisplayFolder, cls: "tlfFileInfoButton" });
+					bFolder = cell6.createEl("p", { text: this.strDisplayFolder, cls: "tlfFileInfoButton" });
 				}
 			var iv = this;
 			bFolder.addEventListener("click", async (e) => {
@@ -150,7 +184,7 @@ export class tlfItemView extends ItemView {
 				const row6 = tlfTable4.createEl("div", { cls: "tlfFileInfoRow" } );
 
 					const cell9 = row6.createEl("div","tlfFileInfoCell");
-					cell9.createEl("div", { text: "Words", cls: "tlfFileInfoLabel" });
+					cell9.createEl("div", { text: "Words" + ((this.plugin.settings.excludeURLFromWordCounts)?"*":""), cls: "tlfFileInfoLabel" });
 
 					const cell10 = row6.createEl("div","tlfFileInfoCell");
 					cell10.createEl("div", { text: "" + this.numWords + "", cls: "tlfFileInfoValueNumber" });
@@ -240,7 +274,7 @@ export class tlfItemView extends ItemView {
 			const tlfTable6 = container.createEl("div", { cls: "tlfFileInfoTable100" });
 				const row13 = tlfTable6.createEl("div", { cls: "tlfFileInfoRow" } );
 					const cell23 = row13.createEl("div","tlfFileInfoCell");
-					cell23.createEl("div", { text: "Word Frequency", cls: "tlfFileInfoLabel" });
+					cell23.createEl("div", { text: "Word Frequency" + ((this.plugin.settings.excludeURLFromWordCounts)?"*":""), cls: "tlfFileInfoLabel" });
 
 				const row14 = tlfTable6.createEl("div", { cls: "tlfFileInfoRow" } );
 					const cell24 = row14.createEl("div","tlfFileInfoCell");
@@ -255,6 +289,45 @@ export class tlfItemView extends ItemView {
 				}		
 		}
 
+		if ( this.plugin.settings.showURLFrequency ) {
+
+			var report = "";
+			var reportRegex = "";
+			if (this.arrCurrentURLFrequency.length > 0) {
+
+					// the settings plugin auto-escapes the \'s.
+//					const regex = "(\\ba\\b)|(\\bthe(.)*\\b)|((.)*st\\b)";
+					const regex = this.plugin.settings.filterRegex;
+
+					const pattern = new RegExp(regex);
+
+					for (let i in this.arrCurrentURLFrequency) {
+						var word = String(this.arrCurrentURLFrequency[i][0]);
+						var find = word.match(pattern);
+
+						if ( find ) {
+							reportRegex += this.arrCurrentURLFrequency[i][1] + ", " + this.arrCurrentURLFrequency[i][0] + "\n";
+						} else {
+							report += this.arrCurrentURLFrequency[i][1] + ", " + this.arrCurrentURLFrequency[i][0] + "\n";
+						}
+					}
+				} else {
+					for (let i in this.arrCurrentURLFrequency) {
+							report += this.arrCurrentURLFrequency[i][1] + ", " + this.arrCurrentURLFrequency[i][0] + "\n";
+					}
+
+			}
+
+			const tlfTable7 = container.createEl("div", { cls: "tlfFileInfoTable100" });
+				const row20 = tlfTable7.createEl("div", { cls: "tlfFileInfoRow" } );
+					const cell34 = row20.createEl("div","tlfFileInfoCell");
+					cell34.createEl("div", { text: "URLs and Files Mentioned" + ((this.plugin.settings.excludeURLFromWordCounts)?"*":""), cls: "tlfFileInfoLabel" });
+
+				const row21 = tlfTable7.createEl("div", { cls: "tlfFileInfoRow" } );
+					const cell35 = row21.createEl("div","tlfFileInfoCell");
+					cell35.createEl("textarea", { text: report, cls: "tlfFileInfoTextArea" });
+
+		} // if ( this.plugin.settings.showURLFrequency ) {
 
 		if ( this.plugin.settings.showSelectedWords ||
 			this.plugin.settings.showSelectedCharacters ||
@@ -279,7 +352,7 @@ export class tlfItemView extends ItemView {
 				const row10 = tlfTable5.createEl("div", { cls: "tlfFileInfoRow" } );
 
 					const cell17 = row10.createEl("div","tlfFileInfoCell");
-					cell17.createEl("div", { text: "Selected Words", cls: "tlfFileInfoLabel" });
+					cell17.createEl("div", { text: "Selected Words" + ((this.plugin.settings.excludeURLFromWordCounts)?"*":""), cls: "tlfFileInfoLabel" });
 
 					const cell18 = row10.createEl("div","tlfFileInfoCell");
 					cell18.createEl("div", { text: "" + this.numSelectedWords + "", cls: "tlfFileInfoValueNumber" });
@@ -307,6 +380,23 @@ export class tlfItemView extends ItemView {
 					cell29.createEl("div", { text: "" + this.numSelectedParagraphs + "", cls: "tlfFileInfoValueNumber" });
 			}
 
+		}
+
+		if ( this.plugin.settings.excludeURLFromWordCounts && 
+			( this.plugin.settings.showURLFrequency || 
+			this.plugin.settings.showSelectedWords || 
+			this.plugin.settings.showWordFrequency || 
+			this.plugin.settings.showCurrentWords ) ) {
+
+			const tlfTable8 = container.createEl("div", { cls: "tlfFileInfoTable" });
+
+				const row22 = tlfTable8.createEl("div", { cls: "tlfFileInfoRow" } );
+			
+					const cell36 = row22.createEl("div","tlfFileInfoParagraph");
+					cell36.createEl("div", { text: 
+					((this.plugin.settings.excludeURLFromWordCounts)?"*":"") + 
+					"Words and word counts exclude URLs and Files. Change in settings.", 
+					cls: "tlfFileInfoLabel" });
 
 		}
 

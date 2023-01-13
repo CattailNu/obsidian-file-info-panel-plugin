@@ -1,21 +1,37 @@
 /* obsidian-file-info-panel-plugin */
 /* https://github.com/CattailNu/obsidian-file-info-panel-plugin */
 
-/* Notes:
-Selected text counts are not working.
-Event structure is not right and needs debouncing
-
 /* Notes for dev
 https://github.com/TfTHacker/obsidian42-brat/blob/main/help/developers.md
 Versioning: https://semver.org
+
+
+20230112 updated to show image width/height
+20230112 updated to add hide and show panel commands
+
+
 */
 
 /* T. L. Ford */
 /* https://www.Cattail.Nu */
 
-import { App, ItemView, WorkspaceLeaf, MetadataCache, Plugin, MarkdownView, PluginSettingTab, Setting, moment, normalizePath } from 'obsidian';
+import {
+	App,
+	arrayBufferToBase64,
+	FileSystemAdapter,
+	ItemView,
+	MarkdownView,
+	MetadataCache,
+	moment,
+	normalizePath,
+	Plugin,
+	PluginSettingTab,
+	Setting,
+	TFile,
+	WorkspaceLeaf
+} from 'obsidian';
 import { VIEW_TYPE } from "./tlfConstants";
-import { getCharacterCount, getSentenceCount, getWordCount, getParagraphCount, getWordFrequencyArray, cleanComments } from "./stats";
+import { getCharacterCount, getSentenceCount, getWordCount, getParagraphCount, getWordFrequencyArray, getURLFrequencyArray, cleanComments } from "./stats";
 //import type CodeMirror from "codemirror";
 //import { EditorView, ViewUpdate } from '@codemirror/view';
 //import { EditorState, Text } from '@codemirror/state';
@@ -56,13 +72,32 @@ export default class tlfFileInfo extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'form-info-show-window',
-			name: 'Show/Hide File Info Panel',
+			id: 'form-info-toggle-window',
+			name: 'Toggle File Info Panel',
 			callback: () => {
 				// open or close the file info window
 				this.toggleView();
 			}
 		});
+
+		this.addCommand({
+			id: 'form-info-show-window',
+			name: 'Show File Info Panel',
+			callback: () => {
+				// open the file info window
+				this.activateView();
+			}
+		});
+
+		this.addCommand({
+			id: 'form-info-hide-window',
+			name: 'Hide File Info Panel',
+			callback: () => {
+				// close the file info window
+				this.deactivateView();
+			}
+		});
+
 
 		this.addSettingTab(new tlfPluginSettingTab(this.app, this));
 
@@ -83,11 +118,24 @@ export default class tlfFileInfo extends Plugin {
 			var file = this.app.workspace.getActiveFile();
 			var data = "";
 			var isText = 0;
+			var isImage = 0;
+			var imageWidth = 0;
+			var imageHeight = 0;
+			var img;
 	
-			if ( file && (file.extension === "md" || file.extension === "txt") ) {
+			if ( file && file.extension && (String(file.extension).toLowerCase() === "md" || String(file.extension).toLowerCase() === "txt") ) {
 				isText = 1;
-				//data = await file.vault.cachedRead(file);
 				data = await this.app.vault.cachedRead(file);
+			}
+
+			// image file data syntax based on:
+			// https://github.com/mvdkwast/obsidian-copy-as-html/blob/master/main.ts
+
+			// not supporting svg image width/height
+			var imageExtensions = ['gif', 'png', 'jpg', 'jpeg', 'bmp', 'png', 'webp', 'tiff'];
+			if (file && file.extension && imageExtensions.includes(String(file.extension).toLowerCase())) {
+				isImage = 1;
+				//data = await this.app.vault.cachedRead(file);
 			}
 	
 			this.app.workspace.getLeavesOfType(VIEW_TYPE).forEach(async (leaf) => {
@@ -112,6 +160,7 @@ export default class tlfFileInfo extends Plugin {
 						leaf.view.numSelectedSentences = 0;
 						leaf.view.arrCurrentWordFrequency = [];
 						leaf.view.isText = 0;
+						leaf.view.isImage = 0;
 	*/
 					} else {
 	
@@ -124,15 +173,17 @@ export default class tlfFileInfo extends Plugin {
 						var selectedSentences = 0;
 						var selectedParagraphs = 0;
 						var currentWordFrequency = [];
+						var currentURLFrequency = [];
 	
-						if (file.extension === "md" || file.extension === "txt") {
+						if (String(file.extension).toLowerCase() === "md" || String(file.extension).toLowerCase() === "txt") {
 	
 							if ( data ) {
-								if ( this.settings.showCurrentWords ) { currentWords = getWordCount(data); }
+								if ( this.settings.showCurrentWords ) { currentWords = getWordCount(data, this.settings.excludeURLFromWordCounts); }
 								if ( this.settings.showCurrentCharacters ) { currentCharacters = getCharacterCount(data); }
 								if ( this.settings.showCurrentSentences ) { currentSentences = getSentenceCount(data); }
 								if ( this.settings.showCurrentParagraphs ) { currentParagraphs = getParagraphCount(data); }
-								if ( this.settings.showWordFrequency ) { currentWordFrequency = getWordFrequencyArray(data); }
+								if ( this.settings.showWordFrequency ) { currentWordFrequency = getWordFrequencyArray(data, this.settings.excludeURLFromWordCounts); }
+								if ( this.settings.showURLFrequency ) { currentURLFrequency = getURLFrequencyArray(data); }
 	
 							}
 	
@@ -160,7 +211,7 @@ export default class tlfFileInfo extends Plugin {
 										if ( v.getMode() === "source" ) {
 											if ( v.editor.somethingSelected() ) {
 												selectedData = v.editor.getSelection();
-												if ( this.settings.showSelectedWords ) { selectedWords = getWordCount(selectedData); }
+												if ( this.settings.showSelectedWords ) { selectedWords = getWordCount(selectedData, this.settings.excludeURLFromWordCounts); }
 												if ( this.settings.showSelectedCharacters ) { selectedCharacters = getCharacterCount(selectedData); }
 												if ( this.settings.showSelectedSentences ) { selectedSentences = getSentenceCount(selectedData); }
 												if ( this.settings.showSelectedParagraphs ) { selectedParagraphs = getParagraphCount(selectedData); }
@@ -178,7 +229,7 @@ export default class tlfFileInfo extends Plugin {
 							} */
 							
 	
-						}
+						} // if md or txt
 	
 						var cDate = moment.unix(file.stat.ctime/1000);
 						var cString = cDate.format(this.settings.momentDateFormat);
@@ -210,6 +261,30 @@ export default class tlfFileInfo extends Plugin {
 						leaf.view.strDisplayFolder = normalizePath(this.app.vault.adapter.basePath + "/" + leaf.view.strRelativePath);
 	
 						leaf.view.strSize = formatBytes(file.stat.size,1);
+
+						leaf.view.isImage = isImage;
+
+						if ( isImage ) {
+
+							let urlPath = file.path;
+							urlPath = encodeURIComponent(urlPath);
+							urlPath = "app://local/" + this.app.vault.adapter.basePath.replace(/\\/g, '/') + leaf.view.strRelativePath.replace(/\\/g, '/') + urlPath;
+
+							img = new Image();
+							img.setAttribute('crossOrigin', 'anonymous');
+							img.onload = function(){
+								imageWidth = img.naturalWidth;
+								imageHeight = img.naturalHeight;
+
+								leaf.view.updateImageData(imageWidth, imageHeight);
+
+							}
+							img.onerror = (err) => {
+								console.log(err);
+							}
+							img.src = urlPath;
+
+						}
 	
 						leaf.view.numWords = currentWords;
 						leaf.view.numCharacters = currentCharacters;
@@ -222,8 +297,13 @@ export default class tlfFileInfo extends Plugin {
 						leaf.view.numSelectedParagraphs = selectedParagraphs;
 	
 						leaf.view.arrCurrentWordFrequency = currentWordFrequency;
+						leaf.view.arrCurrentURLFrequency = currentURLFrequency;
+
+						leaf.view.numImageWidth = imageWidth;
+						leaf.view.numImageHeight = imageHeight;
+
 	
-					}
+					} // if file
 					leaf.view.updateDisplay();
 				}
 			});
@@ -260,6 +340,7 @@ export default class tlfFileInfo extends Plugin {
 
 		// needed for multi-pane support when users change between them
 		this.registerEvent(this.app.workspace.on('active-leaf-change', ( aLeaf? ) => {
+			if ( ! this.app.workspace.getActiveFile() ) return;
 			requeryStats();
 		}));
 
@@ -328,7 +409,6 @@ export default class tlfFileInfo extends Plugin {
 	}
 
 
-
 	async activateView() {
 		this.app.workspace.detachLeavesOfType(VIEW_TYPE);
 
@@ -341,3 +421,4 @@ export default class tlfFileInfo extends Plugin {
 	}
 
 }
+

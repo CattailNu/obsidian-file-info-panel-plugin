@@ -14,6 +14,7 @@ The File Info Panel settings allows you to set which file information is display
 - Click on the folder name to open the file's location.
 - Unobtrusive text matches your currently installed theme.
 - File size is displayed in human-readable format (includes bytes, KB, MB, GB, etc.).
+- Image files show image width and height.
 - Dates include human-readable "from now" text.  Example:
 
 > Mon, Nov 22, 2021 7:59 PM
@@ -25,6 +26,7 @@ The File Info Panel settings allows you to set which file information is display
 	- Selected text's character, word, sentence, and paragraph counts.
 	- Estimated page count based on your provided words per page.
 	- Word frequency analysis.  Optional split into two lists based on your provided regex.
+	- URLs and File names can be separate from Word counts.
 
 ## Compatibility
 
@@ -50,7 +52,8 @@ The File Info Panel settings allows you to set which file information is display
 - **Filter Word Frequency Report**: Split the report into two lists using the provided regex.
 - **Filter Regex**: Customize which words are split out of the main report. [Regex Assistance](https://cattail.nu/obsidian/filePluginRegexHelper.html)
 - **Show Filtered Words**: Show the words filtered by the above regex.
-
+- **Show a URL and File Frequency Report**: Shows mentioned URLs and files.
+- **Exclude URLs and Files From Word Frequency Report and Word Counts**: Excludes URLs and Files from the word-count parsers. Does not apply to characters, sentences, paragraphs, or pages.
 - **Show Selected Character Count**: Display a character count for selected text.
 - **Show Selected Word Count**: Display a word count for for selected text.
 - **Show Selected Sentence Count**: Display a sentence count for selected text.
@@ -59,6 +62,7 @@ The File Info Panel settings allows you to set which file information is display
 ## Screenshots
 
 <img src="https://cattail.nu/obsidian/screenshot_110.png" alt="File Info Panel Info view" height="400">
+*Screenshot is not showing the URL/File exclusion report.
 
 [Enlarge Above](https://cattail.nu/obsidian/screenshot_110.png)
 
@@ -67,6 +71,7 @@ The File Info Panel settings allows you to set which file information is display
 <img src="https://cattail.nu/obsidian/setting01_120.png" alt="File Info Panel Info setting 1 of 4" width="400">
 <img src="https://cattail.nu/obsidian/setting02_110.png" alt="File Info Panel Info setting 2 of 4" width="400">
 <img src="https://cattail.nu/obsidian/setting03_120.png" alt="File Info Panel Info setting 3 of 4" width="400">
+... options for URL / file name report and exclusion ...
 <img src="https://cattail.nu/obsidian/setting04_110.png" alt="File Info Panel Info setting 4 of 4" width="400">
 
 
@@ -77,7 +82,12 @@ See the notes for wrapping dates/file/folders in the css comments.
 
 ```css
 /* obsidian-file-info-panel-plugin */
-/* https://github.com/CattailNu/obsidian-file-info-panel-plugin */
+/* https://github.com/CattailNu/obsidian-file-info-panel-plugin
+
+
+20230112 updated to fix button styles that broke
+
+ */
 
 /* all other tables */
 .tlfFileInfoTable {
@@ -101,6 +111,7 @@ See the notes for wrapping dates/file/folders in the css comments.
 	display: table-row;
 	border: none;
 	margin: 0em;
+	margin-bottom: 0.3em;
 	padding: 0em;
 }
 
@@ -115,12 +126,25 @@ See the notes for wrapping dates/file/folders in the css comments.
 	white-space: nowrap;
 }
 
+/* applies to word/url footnote */
+.tlfFileInfoParagraph {
+	display: table-cell;
+	border: none;
+	margin: 0px;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+	padding: 0em;
+	text-align: left;
+	white-space: normal;
+	word-break: break-word;
+}
+
 
 .tlfFileInfoLabel {
 	border: none;
 	margin: 0px;
-	margin-right: 0.2em;
-	padding: 0em;
+	margin-right: 0.3em;
+	padding: 0.3em;
 	font-size: 0.7em;
 	color: var(--text-muted);
 }
@@ -137,7 +161,10 @@ See the notes for wrapping dates/file/folders in the css comments.
 	margin: 0px;
 	padding: 0em;
 	padding-left: 2em;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
 	font-size: 0.7em;
+	font-weight: bold;
 	height: auto;
 	white-space: nowrap;
 }
@@ -147,6 +174,7 @@ See the notes for wrapping dates/file/folders in the css comments.
 	margin: 0px;
 	padding: 0em;
 	padding-left: 3em;
+	font-weight: bold;
 	font-size: 0.7em;
 	text-align: right;
 }
@@ -155,9 +183,10 @@ See the notes for wrapping dates/file/folders in the css comments.
 	display: table-cell;
 	border: none;
 	margin: 0px;
+	padding: 0.3em;
+	text-align: left;
 	margin-left: 0.5em;
 	padding: 0em;
-	text-align: left;
 }
 
 /*
@@ -170,26 +199,34 @@ See the notes for wrapping dates/file/folders in the css comments.
 .tlfFileInfoButton {
 	border: none;
 	margin: 0px;
+	margin-bottom:0.3em;
+	margin-top:0.3em;
 	padding: 0px;
+	text-align: left;
 	font-size: 0.7em;
+	background:none;
 	color: var(--text-muted);
 	height: 2em;
-	text-align: left;
 	width:100%;
 	max-width:100%;
 	height:auto;
 	white-space: nowrap;
 }
 
+.tlfFileInfoButton:Hover {
+	font-weight: bold;
+}
+
 .tlfFileInfoTextArea {
 	margin: 0px;
-	padding: 0.2em;
+	padding: 0.3em;
 	font-size: 0.7em;
 	color: var(--text-muted);
 	line-height: 1.2;
 	width: 100%;
 	height: 8em;
 }
+
 ```
 
 <img src="https://cattail.nu/obsidian/css_customization_variables.png" alt="File Info Panel CSS Customization Variables" width="400">
@@ -197,7 +234,7 @@ See the notes for wrapping dates/file/folders in the css comments.
 
 ## Say Thanks 🙏
 
-Consider reading and sharing one of my books (available through Amazon).  There are fantasy, science fiction, novelty art books, non-fiction, thriller, and even a biography.
+Consider reading and sharing one of my books (available through Amazon).  There are fantasy, science fiction, novelty art books, non-fiction, and a thriller.  Share links to them.  Seriously, I really need your help as an author getting the word out. Trying to be an independently-published author is challenging.
 
 [https://www.amazon.com/T.-L.-Ford/e/B0034Q6Q2S](https://www.amazon.com/T.-L.-Ford/e/B0034Q6Q2S)
 
@@ -210,6 +247,14 @@ Featured: Make your own dreamcatcher graphics:
 
 
 ## Change Log
+
+Thank you to those who have taken the time to submit issues on github. Your feedback is helpful!
+
+### 1.3
+- Feature add: separate URLs from word counts and word frequency report. (Issue #9)
+- Feature add: open and close items for hotkeys. (Issue #10)
+- Feature add: show image width/height for images.  (Issue #11)
+- Bug Fix: css updated for new version that broke the old css.  (Issue #12)
 
 ### 1.2.5
 - Bug fix (Issue #8).
