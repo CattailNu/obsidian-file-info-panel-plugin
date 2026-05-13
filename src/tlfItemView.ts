@@ -29,6 +29,7 @@ export class tlfItemView extends ItemView {
 
 	strSize = "";
 	strRelativePath = "";
+	strFrontMatter: string | null = null;
 
 	numWords = 0;
 	numCharacters = 0;
@@ -161,6 +162,19 @@ export class tlfItemView extends ItemView {
 		}
 
 		if ( ! this.isText ) { return; }
+
+		if ( this.plugin.settings.showFrontMatterInPanel &&
+			this.strFrontMatter != null ) {
+
+			const tlfTable9 = container.createEl("div", { cls: "tlfFileInfoTable100" });
+				const row25 = tlfTable9.createEl("div", { cls: "tlfFileInfoRow" } );
+					const cell41 = row25.createEl("div","tlfFileInfoCell");
+					cell41.createEl("div", { text: "Front Matter", cls: "tlfFileInfoLabel" });
+
+				const row26 = tlfTable9.createEl("div", { cls: "tlfFileInfoRow" } );
+					const cell42 = row26.createEl("div","tlfFileInfoCell");
+					cell42.createEl("textarea", { text: this.strFrontMatter, cls: "tlfFileInfoTextArea" });
+		}
 
 		if ( this.plugin.settings.showCurrentWords ||
 			this.plugin.settings.showCurrentCharacters ||

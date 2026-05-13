@@ -40,6 +40,9 @@ export interface tlfInterfaceSettings {
 	showSelectedSentences: boolean;
 	showSelectedParagraphs: boolean;
 	showSelectedLines: boolean;
+
+	includeFrontMatterAsText: boolean;
+	showFrontMatterInPanel: boolean;
 	
 	showWordFrequency: boolean;
 	showURLFrequency: boolean;
@@ -74,6 +77,9 @@ export const tlfDefaultSettings = Object.freeze({
 	showSelectedSentences: true,
 	showSelectedParagraphs: true,
 	showSelectedLines: true,
+
+	includeFrontMatterAsText: true,
+	showFrontMatterInPanel: false,
 	
 	showWordFrequency: true,
 	showURLFrequency: true,
@@ -416,6 +422,31 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 				cb.setValue(this.plugin.settings.showSelectedLines);
 				cb.onChange(async (value: boolean) => {
 					this.plugin.settings.showSelectedLines = value;
+					await this.plugin.saveSettings();
+				});
+		});
+
+		containerEl.createEl('h4', {text: 'Front Matter'});
+
+		containerEl.createEl('p', {text: 'Front Matter is defined by --- at the top of the file, followed by the properties, and ending with ---.'});
+
+		new Setting(containerEl)
+			.setName("Include Front Matter as Text")
+			.setDesc("Includes Front Matter in all operations (counts, filters, etc.).")
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.includeFrontMatterAsText);
+				cb.onChange(async (value: boolean) => {
+					this.plugin.settings.includeFrontMatterAsText = value;
+					await this.plugin.saveSettings();
+				});
+		});
+
+		new Setting(containerEl)
+			.setName("Show Front Matter in Panel")
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.showFrontMatterInPanel);
+				cb.onChange(async (value: boolean) => {
+					this.plugin.settings.showFrontMatterInPanel = value;
 					await this.plugin.saveSettings();
 				});
 		});

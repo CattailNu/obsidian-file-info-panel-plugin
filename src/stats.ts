@@ -79,6 +79,15 @@ export function getLineCount(text: string): number {
 	return ((text || "").match(/\r\n|\r|\n/g) || []).length + 1;
 }
 
+export function getFrontMatterText(text: string): string | null {
+	const frontMatter = (text || "").match(/^---(?:\r\n|\r|\n)([\s\S]*?)(?:\r\n|\r|\n)---(?:\r\n|\r|\n|$)/);
+	return frontMatter && frontMatter[1] != undefined ? frontMatter[1] : null;
+}
+
+export function stripFrontMatter(text: string): string {
+	return (text || "").replace(/^---(?:\r\n|\r|\n)[\s\S]*?(?:\r\n|\r|\n)---(?:\r\n|\r|\n|$)/, "");
+}
+
 function stripURLs(text: string): string {
 	const pattern = new RegExp(
 		[

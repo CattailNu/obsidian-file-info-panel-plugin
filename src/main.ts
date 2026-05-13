@@ -39,7 +39,7 @@ import {
 	WorkspaceLeaf
 } from 'obsidian';
 import { VIEW_TYPE } from "./tlfConstants";
-import { getCharacterCount, getSentenceCount, getWordCount, getParagraphCount, getLineCount, getWordFrequencyArray, getURLFrequencyArray, cleanComments } from "./stats";
+import { getCharacterCount, getSentenceCount, getWordCount, getParagraphCount, getLineCount, getFrontMatterText, stripFrontMatter, getWordFrequencyArray, getURLFrequencyArray, cleanComments } from "./stats";
 //import type CodeMirror from "codemirror";
 //import { EditorView, ViewUpdate } from '@codemirror/view';
 //import { EditorState, Text } from '@codemirror/state';
@@ -158,6 +158,7 @@ export default class tlfFileInfo extends Plugin {
 	//					leaf.view.strFile = "";
 	//					leaf.view.strFolder = "";
 						leaf.view.strSize = "";
+						leaf.view.strFrontMatter = null;
 						leaf.view.numWords = 0;
 						leaf.view.numCharacters = 0;
 						leaf.view.numSentences = 0;
@@ -184,19 +185,22 @@ export default class tlfFileInfo extends Plugin {
 						var selectedSentences = 0;
 						var selectedParagraphs = 0;
 						var selectedLines = 0;
+						var currentFrontMatter: string | null = null;
 						var currentWordFrequency = [];
 						var currentURLFrequency = [];
 	
 						if (String(file.extension).toLowerCase() === "md" || String(file.extension).toLowerCase() === "txt") {
 	
 							if ( data ) {
-								if ( this.settings.showCurrentWords ) { currentWords = getWordCount(data, this.settings.excludeURLFromWordCounts); }
-								if ( this.settings.showCurrentCharacters ) { currentCharacters = getCharacterCount(data); }
-								if ( this.settings.showCurrentSentences ) { currentSentences = getSentenceCount(data); }
-								if ( this.settings.showCurrentParagraphs ) { currentParagraphs = getParagraphCount(data); }
-								if ( this.settings.showCurrentLines ) { currentLines = getLineCount(data); }
-								if ( this.settings.showWordFrequency ) { currentWordFrequency = getWordFrequencyArray(data, this.settings.excludeURLFromWordCounts); }
-								if ( this.settings.showURLFrequency ) { currentURLFrequency = getURLFrequencyArray(data); }
+								var statData = this.settings.includeFrontMatterAsText ? data : stripFrontMatter(data);
+								if ( this.settings.showCurrentWords ) { currentWords = getWordCount(statData, this.settings.excludeURLFromWordCounts); }
+								if ( this.settings.showCurrentCharacters ) { currentCharacters = getCharacterCount(statData); }
+								if ( this.settings.showCurrentSentences ) { currentSentences = getSentenceCount(statData); }
+								if ( this.settings.showCurrentParagraphs ) { currentParagraphs = getParagraphCount(statData); }
+								if ( this.settings.showCurrentLines ) { currentLines = getLineCount(statData); }
+								if ( this.settings.showFrontMatterInPanel ) { currentFrontMatter = getFrontMatterText(data); }
+								if ( this.settings.showWordFrequency ) { currentWordFrequency = getWordFrequencyArray(statData, this.settings.excludeURLFromWordCounts); }
+								if ( this.settings.showURLFrequency ) { currentURLFrequency = getURLFrequencyArray(statData); }
 	
 							}
 	
@@ -225,11 +229,12 @@ export default class tlfFileInfo extends Plugin {
 										if ( v.getMode() === "source" ) {
 											if ( v.editor.somethingSelected() ) {
 												selectedData = v.editor.getSelection();
-												if ( this.settings.showSelectedWords ) { selectedWords = getWordCount(selectedData, this.settings.excludeURLFromWordCounts); }
-												if ( this.settings.showSelectedCharacters ) { selectedCharacters = getCharacterCount(selectedData); }
-												if ( this.settings.showSelectedSentences ) { selectedSentences = getSentenceCount(selectedData); }
-												if ( this.settings.showSelectedParagraphs ) { selectedParagraphs = getParagraphCount(selectedData); }
-												if ( this.settings.showSelectedLines ) { selectedLines = getLineCount(selectedData); }
+												var selectedStatData = this.settings.includeFrontMatterAsText ? selectedData : stripFrontMatter(selectedData);
+												if ( this.settings.showSelectedWords ) { selectedWords = getWordCount(selectedStatData, this.settings.excludeURLFromWordCounts); }
+												if ( this.settings.showSelectedCharacters ) { selectedCharacters = getCharacterCount(selectedStatData); }
+												if ( this.settings.showSelectedSentences ) { selectedSentences = getSentenceCount(selectedStatData); }
+												if ( this.settings.showSelectedParagraphs ) { selectedParagraphs = getParagraphCount(selectedStatData); }
+												if ( this.settings.showSelectedLines ) { selectedLines = getLineCount(selectedStatData); }
 											}
 										}
 									}
@@ -276,6 +281,7 @@ export default class tlfFileInfo extends Plugin {
 						leaf.view.strDisplayFolder = normalizePath(this.app.vault.adapter.basePath + "/" + leaf.view.strRelativePath);
 	
 						leaf.view.strSize = formatBytes(file.stat.size,1);
+						leaf.view.strFrontMatter = currentFrontMatter;
 
 						leaf.view.isImage = isImage;
 
