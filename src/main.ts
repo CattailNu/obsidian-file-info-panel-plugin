@@ -58,6 +58,9 @@ import { formatBytes } from "./tlfUtilities";
 
 export default class tlfFileInfo extends Plugin {
 	settings: tlfPluginSettingTab;
+	statusBarItem: HTMLElement;
+	statusBarPopup: HTMLElement | null = null;
+	currentFileInfo: any = {};
 
 	// intervalTimer = null;
 
@@ -109,6 +112,27 @@ export default class tlfFileInfo extends Plugin {
 
 		this.addSettingTab(new tlfPluginSettingTab(this.app, this));
 
+		this.currentFileInfo = this.createFileInfoData();
+		this.statusBarItem = this.addStatusBarItem();
+		this.statusBarItem.addClass("tlfFileInfoStatusBar");
+		this.registerDomEvent(this.statusBarItem, "click", (evt: MouseEvent) => {
+			evt.preventDefault();
+			evt.stopPropagation();
+			this.toggleStatusBarPopup();
+		});
+		this.registerDomEvent(document, "mousedown", (evt: MouseEvent) => {
+			if ( this.statusBarPopup &&
+				! this.statusBarPopup.contains(evt.target as Node) &&
+				! this.statusBarItem.contains(evt.target as Node) ) {
+				this.closeStatusBarPopup();
+			}
+		});
+		this.registerDomEvent(document, "keydown", (evt: KeyboardEvent) => {
+			if ( evt.key == "Escape" ) {
+				this.closeStatusBarPopup();
+			}
+		});
+		this.updateImplementationSettings();
 
 		const debounce = (n: number, fn: (...params: any[]) => any, immed: boolean = false) => {
 			let timer: number | undefined = undefined;
@@ -146,190 +170,125 @@ export default class tlfFileInfo extends Plugin {
 				//data = await this.app.vault.cachedRead(file);
 			}
 	
-			this.app.workspace.getLeavesOfType(VIEW_TYPE).forEach(async (leaf) => {
-				if (leaf.view instanceof tlfItemView) {
-	
-					if (! file ) {
-	/*
-	// Not the correct thing to do (comment out the defaults), but should keep the
-	// mobile apps from ditching the stats because the current "view" isn't a file, but a plugin panel
-						leaf.view.strCreated = "";
-						leaf.view.strModified = "";
-	//					leaf.view.strFile = "";
-	//					leaf.view.strFolder = "";
-						leaf.view.strSize = "";
-						leaf.view.strFrontMatter = null;
-						leaf.view.numWords = 0;
-						leaf.view.numCharacters = 0;
-						leaf.view.numSentences = 0;
-						leaf.view.numParagraphs = 0;
-						leaf.view.numLines = 0;
-						leaf.view.numSelectedWords = 0;
-						leaf.view.numSelectedParagraphs = 0;
-						leaf.view.numSelectedLines = 0;
-						leaf.view.numSelectedCharacters = 0;
-						leaf.view.numSelectedSentences = 0;
-						leaf.view.arrCurrentWordFrequency = [];
-						leaf.view.isText = 0;
-						leaf.view.isImage = 0;
-	*/
-					} else {
-	
-						var currentWords = 0;
-						var currentCharacters = 0;
-						var currentSentences = 0;
-						var currentParagraphs = 0;
-						var currentLines = 0;
-						var selectedWords = 0;
-						var selectedCharacters = 0;
-						var selectedSentences = 0;
-						var selectedParagraphs = 0;
-						var selectedLines = 0;
-						var currentFrontMatter: string | null = null;
-						var currentWordFrequency = [];
-						var currentURLFrequency = [];
-	
-						if (String(file.extension).toLowerCase() === "md" || String(file.extension).toLowerCase() === "txt") {
-	
-							if ( data ) {
-								var statData = this.settings.includeFrontMatterAsText ? data : stripFrontMatter(data);
-								if ( this.settings.showCurrentWords ) { currentWords = getWordCount(statData, this.settings.excludeURLFromWordCounts); }
-								if ( this.settings.showCurrentCharacters ) { currentCharacters = getCharacterCount(statData); }
-								if ( this.settings.showCurrentSentences ) { currentSentences = getSentenceCount(statData); }
-								if ( this.settings.showCurrentParagraphs ) { currentParagraphs = getParagraphCount(statData); }
-								if ( this.settings.showCurrentLines ) { currentLines = getLineCount(statData); }
-								if ( this.settings.showFrontMatterInPanel ) { currentFrontMatter = getFrontMatterText(data); }
-								if ( this.settings.showWordFrequency ) { currentWordFrequency = getWordFrequencyArray(statData, this.settings.excludeURLFromWordCounts); }
-								if ( this.settings.showURLFrequency ) { currentURLFrequency = getURLFrequencyArray(statData); }
-	
-							}
-	
-							if ( this.settings.showSelectedWords ||
-								this.settings.showSelectedCharacters ||
-								this.settings.showSelectedSentences ||
-								this.settings.showSelectedParagraphs ||
-								this.settings.showSelectedLines
-							) {
-	/*
-								if ( ! this.intervalTimer ) {
-									this.intervalTimer = window.setInterval(() => {
-										this.requeryStats();
-										}
-									, INTERVAL_MINUTES * 60 * 1000);
-									this.registerInterval(this.interval);
-								}
-	*/
-								var selectedData = "";
-	
-								const v = this.app.workspace.getActiveViewOfType(MarkdownView);
-								if ( v ) {
-								if ( v.file ) {
-								if ( v.file == file ) {
-									if ("editor" in v) {
-										if ( v.getMode() === "source" ) {
-											if ( v.editor.somethingSelected() ) {
-												selectedData = v.editor.getSelection();
-												var selectedStatData = this.settings.includeFrontMatterAsText ? selectedData : stripFrontMatter(selectedData);
-												if ( this.settings.showSelectedWords ) { selectedWords = getWordCount(selectedStatData, this.settings.excludeURLFromWordCounts); }
-												if ( this.settings.showSelectedCharacters ) { selectedCharacters = getCharacterCount(selectedStatData); }
-												if ( this.settings.showSelectedSentences ) { selectedSentences = getSentenceCount(selectedStatData); }
-												if ( this.settings.showSelectedParagraphs ) { selectedParagraphs = getParagraphCount(selectedStatData); }
-												if ( this.settings.showSelectedLines ) { selectedLines = getLineCount(selectedStatData); }
-											}
-										}
+			this.currentFileInfo = this.createFileInfoData();
+
+			if ( file ) {
+				var currentWords = 0;
+				var currentCharacters = 0;
+				var currentSentences = 0;
+				var currentParagraphs = 0;
+				var currentLines = 0;
+				var selectedWords = 0;
+				var selectedCharacters = 0;
+				var selectedSentences = 0;
+				var selectedParagraphs = 0;
+				var selectedLines = 0;
+				var currentFrontMatter: string | null = null;
+				var currentWordFrequency = [];
+				var currentURLFrequency = [];
+
+				if (String(file.extension).toLowerCase() === "md" || String(file.extension).toLowerCase() === "txt") {
+					if ( data ) {
+						var statData = this.settings.includeFrontMatterAsText ? data : stripFrontMatter(data);
+						if ( this.settings.showCurrentWords ) { currentWords = getWordCount(statData, this.settings.excludeURLFromWordCounts); }
+						if ( this.settings.showCurrentCharacters ) { currentCharacters = getCharacterCount(statData); }
+						if ( this.settings.showCurrentSentences ) { currentSentences = getSentenceCount(statData); }
+						if ( this.settings.showCurrentParagraphs ) { currentParagraphs = getParagraphCount(statData); }
+						if ( this.settings.showCurrentLines ) { currentLines = getLineCount(statData); }
+						if ( this.settings.showFrontMatterInPanel ) { currentFrontMatter = getFrontMatterText(data); }
+						if ( this.settings.showWordFrequency ) { currentWordFrequency = getWordFrequencyArray(statData, this.settings.excludeURLFromWordCounts); }
+						if ( this.settings.showURLFrequency ) { currentURLFrequency = getURLFrequencyArray(statData); }
+					}
+
+					if ( this.settings.showSelectedWords ||
+						this.settings.showSelectedCharacters ||
+						this.settings.showSelectedSentences ||
+						this.settings.showSelectedParagraphs ||
+						this.settings.showSelectedLines
+					) {
+						var selectedData = "";
+
+						const v = this.app.workspace.getActiveViewOfType(MarkdownView);
+						if ( v ) {
+						if ( v.file ) {
+						if ( v.file == file ) {
+							if ("editor" in v) {
+								if ( v.getMode() === "source" ) {
+									if ( v.editor.somethingSelected() ) {
+										selectedData = v.editor.getSelection();
+										var selectedStatData = this.settings.includeFrontMatterAsText ? selectedData : stripFrontMatter(selectedData);
+										if ( this.settings.showSelectedWords ) { selectedWords = getWordCount(selectedStatData, this.settings.excludeURLFromWordCounts); }
+										if ( this.settings.showSelectedCharacters ) { selectedCharacters = getCharacterCount(selectedStatData); }
+										if ( this.settings.showSelectedSentences ) { selectedSentences = getSentenceCount(selectedStatData); }
+										if ( this.settings.showSelectedParagraphs ) { selectedParagraphs = getParagraphCount(selectedStatData); }
+										if ( this.settings.showSelectedLines ) { selectedLines = getLineCount(selectedStatData); }
 									}
-								} } }
-							} /* else {
-								// they have changed settings to turn these off
-								// so kill it.
-								if ( this.intervalTimer ) {
-									window.clearInterval(this.intervalTimer);
-									this.intervalTimer = null;
-								}					
-							} */
-							
-	
-						} // if md or txt
-	
-						var cDate = moment.unix(file.stat.ctime/1000);
-						var cString = cDate.format(this.settings.momentDateFormat);
-						
-	
-						var mDate = moment.unix(file.stat.mtime/1000);
-						var mString = mDate.format(this.settings.momentDateFormat);
-	
-						leaf.view.isText = isText;
-						leaf.view.strCreated = cString;
-						leaf.view.strCreatedFromNow = cDate.fromNow();
-	
-						leaf.view.strModified = mString;
-						leaf.view.strModifiedFromNow = mDate.fromNow();
-	
-	
-						leaf.view.strDisplayFile = file.name;
-	
-						if ( file.parent ) {
-							leaf.view.strRelativePath = file.parent.path;
-						} else {
-							leaf.view.strRelativePath = file.path;
-						}
-	
-						// app.openWithDefaultApp(iv.strFileOpen);
-						// app.showInFolder(iv.strFileOpen);
-						leaf.view.strFileOpen = normalizePath(leaf.view.strRelativePath + "/" + file.name);
-	
-						leaf.view.strDisplayFolder = normalizePath(this.app.vault.adapter.basePath + "/" + leaf.view.strRelativePath);
-	
-						leaf.view.strSize = formatBytes(file.stat.size,1);
-						leaf.view.strFrontMatter = currentFrontMatter;
-
-						leaf.view.isImage = isImage;
-
-						if ( isImage ) {
-
-							let urlPath = file.path;
-							urlPath = encodeURIComponent(urlPath);
-							urlPath = "app://local/" + this.app.vault.adapter.basePath.replace(/\\/g, '/') + leaf.view.strRelativePath.replace(/\\/g, '/') + urlPath;
-
-							img = new Image();
-							img.setAttribute('crossOrigin', 'anonymous');
-							img.onload = function(){
-								imageWidth = img.naturalWidth;
-								imageHeight = img.naturalHeight;
-
-								leaf.view.updateImageData(imageWidth, imageHeight);
-
+								}
 							}
-							img.onerror = (err) => {
-								console.log(err);
-							}
-							img.src = urlPath;
-
-						}
-	
-						leaf.view.numWords = currentWords;
-						leaf.view.numCharacters = currentCharacters;
-						leaf.view.numSentences = currentSentences;
-						leaf.view.numParagraphs = currentParagraphs;
-						leaf.view.numLines = currentLines;
-	
-						leaf.view.numSelectedWords = selectedWords;
-						leaf.view.numSelectedCharacters = selectedCharacters;
-						leaf.view.numSelectedSentences = selectedSentences;
-						leaf.view.numSelectedParagraphs = selectedParagraphs;
-						leaf.view.numSelectedLines = selectedLines;
-	
-						leaf.view.arrCurrentWordFrequency = currentWordFrequency;
-						leaf.view.arrCurrentURLFrequency = currentURLFrequency;
-
-						leaf.view.numImageWidth = imageWidth;
-						leaf.view.numImageHeight = imageHeight;
-
-	
-					} // if file
-					leaf.view.updateDisplay();
+						} } }
+					}
 				}
-			});
+
+				var cDate = moment.unix(file.stat.ctime/1000);
+				var cString = cDate.format(this.settings.momentDateFormat);
+				
+				var mDate = moment.unix(file.stat.mtime/1000);
+				var mString = mDate.format(this.settings.momentDateFormat);
+
+				this.currentFileInfo.isText = isText;
+				this.currentFileInfo.strCreated = cString;
+				this.currentFileInfo.strCreatedFromNow = cDate.fromNow();
+				this.currentFileInfo.strModified = mString;
+				this.currentFileInfo.strModifiedFromNow = mDate.fromNow();
+				this.currentFileInfo.strDisplayFile = file.name;
+
+				if ( file.parent ) {
+					this.currentFileInfo.strRelativePath = file.parent.path;
+				} else {
+					this.currentFileInfo.strRelativePath = file.path;
+				}
+
+				this.currentFileInfo.strFileOpen = normalizePath(this.currentFileInfo.strRelativePath + "/" + file.name);
+				this.currentFileInfo.strDisplayFolder = normalizePath(this.app.vault.adapter.basePath + "/" + this.currentFileInfo.strRelativePath);
+				this.currentFileInfo.strSize = formatBytes(file.stat.size,1);
+				this.currentFileInfo.strFrontMatter = currentFrontMatter;
+				this.currentFileInfo.isImage = isImage;
+				this.currentFileInfo.numWords = currentWords;
+				this.currentFileInfo.numCharacters = currentCharacters;
+				this.currentFileInfo.numSentences = currentSentences;
+				this.currentFileInfo.numParagraphs = currentParagraphs;
+				this.currentFileInfo.numLines = currentLines;
+				this.currentFileInfo.numSelectedWords = selectedWords;
+				this.currentFileInfo.numSelectedCharacters = selectedCharacters;
+				this.currentFileInfo.numSelectedSentences = selectedSentences;
+				this.currentFileInfo.numSelectedParagraphs = selectedParagraphs;
+				this.currentFileInfo.numSelectedLines = selectedLines;
+				this.currentFileInfo.arrCurrentWordFrequency = currentWordFrequency;
+				this.currentFileInfo.arrCurrentURLFrequency = currentURLFrequency;
+				this.currentFileInfo.numImageWidth = imageWidth;
+				this.currentFileInfo.numImageHeight = imageHeight;
+
+				if ( isImage ) {
+					let urlPath = file.path;
+					urlPath = encodeURIComponent(urlPath);
+					urlPath = "app://local/" + this.app.vault.adapter.basePath.replace(/\\/g, '/') + this.currentFileInfo.strRelativePath.replace(/\\/g, '/') + urlPath;
+
+					img = new Image();
+					img.setAttribute('crossOrigin', 'anonymous');
+					img.onload = () => {
+						this.currentFileInfo.numImageWidth = img.naturalWidth;
+						this.currentFileInfo.numImageHeight = img.naturalHeight;
+						this.updateFileInfoDisplays();
+					}
+					img.onerror = (err) => {
+						console.log(err);
+					}
+					img.src = urlPath;
+				}
+			}
+
+			this.updateStatusBarItem();
+			this.updateFileInfoDisplays();
 		});
 
 		// needed for when a new file is created with a keystroke and is renamed
@@ -394,6 +353,7 @@ export default class tlfFileInfo extends Plugin {
 
 
 	onunload() {
+		this.closeStatusBarPopup();
 		this.app.workspace.detachLeavesOfType(VIEW_TYPE);
 		this.app.workspace.iterateCodeMirrors(cm => {
 		  cm.off('change', this.onChange);
@@ -408,6 +368,115 @@ export default class tlfFileInfo extends Plugin {
 		await this.saveData(this.settings);
 	}
 
+	createFileInfoData(): any {
+		return {
+			app: this.app,
+			plugin: this,
+			isText: 0,
+			isImage: 0,
+			strCreated: "",
+			strCreatedFromNow: "",
+			strModified: "",
+			strModifiedFromNow: "",
+			strDisplayFile: "",
+			strDisplayFolder: "",
+			strFileOpen: "",
+			strSize: "",
+			strRelativePath: "",
+			strFrontMatter: null,
+			numWords: 0,
+			numCharacters: 0,
+			numSentences: 0,
+			numParagraphs: 0,
+			numLines: 0,
+			numImageWidth: 0,
+			numImageHeight: 0,
+			arrCurrentWordFrequency: [],
+			arrCurrentURLFrequency: [],
+			numSelectedWords: 0,
+			numSelectedCharacters: 0,
+			numSelectedSentences: 0,
+			numSelectedParagraphs: 0,
+			numSelectedLines: 0,
+		};
+	}
+
+	updateImplementationSettings() {
+		if ( ! this.settings.showPanel && ! this.settings.showStatusBarPopup ) {
+			this.settings.showPanel = true;
+		}
+
+		if ( ! this.settings.showPanel ) {
+			this.deactivateView();
+		}
+
+		if ( this.statusBarItem ) {
+			this.statusBarItem.toggleClass("tlfFileInfoStatusBarHidden", ! this.settings.showStatusBarPopup);
+		}
+
+		if ( ! this.settings.showStatusBarPopup ) {
+			this.closeStatusBarPopup();
+		}
+		this.updateStatusBarItem();
+	}
+
+	updateStatusBarItem() {
+		if ( ! this.statusBarItem ) { return; }
+		if ( this.currentFileInfo.strDisplayFile == "" ) {
+			this.statusBarItem.setText("No current file");
+		} else {
+			this.statusBarItem.setText(this.currentFileInfo.strDisplayFile);
+		}
+	}
+
+	updateFileInfoDisplays() {
+		this.app.workspace.getLeavesOfType(VIEW_TYPE).forEach((leaf) => {
+			if (leaf.view instanceof tlfItemView) {
+				Object.assign(leaf.view, this.currentFileInfo);
+				leaf.view.app = this.app;
+				leaf.view.plugin = this;
+				leaf.view.updateDisplay();
+			}
+		});
+		this.updateStatusBarItem();
+		this.updateStatusBarPopup();
+	}
+
+	toggleStatusBarPopup() {
+		if ( ! this.settings.showStatusBarPopup ) { return; }
+		if ( this.statusBarPopup ) {
+			this.closeStatusBarPopup();
+		} else {
+			this.openStatusBarPopup();
+		}
+	}
+
+	openStatusBarPopup() {
+		if ( ! this.statusBarItem ) { return; }
+		this.closeStatusBarPopup();
+
+		const statusBarRect = this.statusBarItem.getBoundingClientRect();
+		const popup = document.body.createEl("div", { cls: "tlfFileInfoStatusPopup" });
+		popup.style.right = (window.innerWidth - statusBarRect.right) + "px";
+		popup.style.bottom = (window.innerHeight - statusBarRect.top + 4) + "px";
+
+		this.statusBarPopup = popup;
+		this.updateStatusBarPopup();
+	}
+
+	updateStatusBarPopup() {
+		if ( ! this.statusBarPopup ) { return; }
+		this.statusBarPopup.empty();
+		tlfItemView.prototype.renderDisplay.call(this.currentFileInfo, this.statusBarPopup);
+	}
+
+	closeStatusBarPopup() {
+		if ( this.statusBarPopup ) {
+			this.statusBarPopup.remove();
+			this.statusBarPopup = null;
+		}
+	}
+
 	async deactivateView() {
 /*
 		if ( this.intervalTimer ) {
@@ -419,6 +488,12 @@ export default class tlfFileInfo extends Plugin {
 	}
 
 	async toggleView() {
+		if ( ! this.settings.showPanel ) {
+			if ( this.settings.showStatusBarPopup ) {
+				this.toggleStatusBarPopup();
+			}
+			return;
+		}
 		var found = false;
 		this.app.workspace.getLeavesOfType(VIEW_TYPE).forEach((leaf) => {
 			if (leaf.view instanceof tlfItemView) {
@@ -433,6 +508,7 @@ export default class tlfFileInfo extends Plugin {
 
 
 	async activateView() {
+		if ( ! this.settings.showPanel ) { return; }
 		this.app.workspace.detachLeavesOfType(VIEW_TYPE);
 
 		await this.app.workspace.getRightLeaf(false).setViewState({
@@ -441,6 +517,7 @@ export default class tlfFileInfo extends Plugin {
 		});
 
 		this.app.workspace.revealLeaf(this.app.workspace.getLeavesOfType(VIEW_TYPE)[0]);
+		this.updateFileInfoDisplays();
 	}
 
 }

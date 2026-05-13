@@ -18,6 +18,9 @@ import { COMMON_ENGLISH_WORDS } from "./tlfConstants";
 
 
 export interface tlfInterfaceSettings {
+	showPanel: boolean;
+	showStatusBarPopup: boolean;
+
 	showCreated: boolean;
 	showModified: boolean;
 	momentDateFormat: string;
@@ -55,6 +58,9 @@ export interface tlfInterfaceSettings {
 }
 
 export const tlfDefaultSettings = Object.freeze({
+	showPanel: true,
+	showStatusBarPopup: false,
+
 	showCreated: true,
 	showModified: true,
 	momentDateFormat: "llll",
@@ -106,6 +112,38 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 
 		containerEl.createEl('h2', {text: 'File Info Panel Settings'});
 	//	containerEl.createEl('p', {text: 'Reload required for changes to take effect.'});
+
+		containerEl.createEl('h4', {text: 'Implementation'});
+
+		new Setting(containerEl)
+			.setName("Show Panel")
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.showPanel);
+				cb.onChange(async (value: boolean) => {
+					this.plugin.settings.showPanel = value;
+					if ( ! this.plugin.settings.showPanel && ! this.plugin.settings.showStatusBarPopup ) {
+						this.plugin.settings.showStatusBarPopup = true;
+					}
+					await this.plugin.saveSettings();
+					this.plugin.updateImplementationSettings();
+					this.display();
+				});
+		});
+
+		new Setting(containerEl)
+			.setName("Show Status Bar Popup")
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.showStatusBarPopup);
+				cb.onChange(async (value: boolean) => {
+					this.plugin.settings.showStatusBarPopup = value;
+					if ( ! this.plugin.settings.showPanel && ! this.plugin.settings.showStatusBarPopup ) {
+						this.plugin.settings.showPanel = true;
+					}
+					await this.plugin.saveSettings();
+					this.plugin.updateImplementationSettings();
+					this.display();
+				});
+		});
 
 		containerEl.createEl('h4', {text: 'File Information'});
 

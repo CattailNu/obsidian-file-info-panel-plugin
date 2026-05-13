@@ -67,7 +67,10 @@ export class tlfItemView extends ItemView {
 	updateDisplay() {
 		const container = this.containerEl.children[1];
 		container.empty();
+		this.renderDisplay(container);
+	}
 
+	renderDisplay(container: any) {
 		if ( this.strDisplayFile == "" ) {
 			container.createEl("p", { text: "No current file.", cls: "tlfFileInfoLabel" });
 			return;
@@ -440,7 +443,7 @@ export class tlfItemView extends ItemView {
 
 		}
 
-	} // end updateDisplay()
+	} // end renderDisplay()
 
 	getViewType() {
 		return VIEW_TYPE;
