@@ -15,14 +15,22 @@ Versioning: https://semver.org
 /* T. L. Ford */
 /* https://www.Cattail.Nu */
 
+/*
+import {App, Editor, MarkdownView, Modal, Notice, Plugin} from 'obsidian';
+import {DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab} from "./settings";
+*/
+
 import {
 	App,
 	arrayBufferToBase64,
+	Editor,
 	FileSystemAdapter,
 	ItemView,
 	MarkdownView,
 	MetadataCache,
+	Modal,
 	moment,
+	Notice,
 	normalizePath,
 	Plugin,
 	PluginSettingTab,
