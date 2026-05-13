@@ -34,6 +34,7 @@ export class tlfItemView extends ItemView {
 	numCharacters = 0;
 	numSentences = 0;
 	numParagraphs = 0;
+	numLines = 0;
 	numImageWidth = 0;
 	numImageHeight = 0;
 
@@ -46,6 +47,7 @@ export class tlfItemView extends ItemView {
 	numSelectedCharacters = 0;
 	numSelectedSentences = 0;
 	numSelectedParagraphs = 0;
+	numSelectedLines = 0;
 	
 	plugin: tlfFileInfo;
 
@@ -164,7 +166,8 @@ export class tlfItemView extends ItemView {
 			this.plugin.settings.showCurrentCharacters ||
 			this.plugin.settings.showCurrentSentences ||
 			this.plugin.settings.showCurrentPages ||
-			this.plugin.settings.showCurrentParagraphs ) {
+			this.plugin.settings.showCurrentParagraphs ||
+			this.plugin.settings.showCurrentLines ) {
 
 			const tlfTable4 = container.createEl("div", { cls: "tlfFileInfoTable" });
 
@@ -210,6 +213,17 @@ export class tlfItemView extends ItemView {
 
 					const cell27 = row16.createEl("div","tlfFileInfoCell");
 					cell27.createEl("div", { text: "" + this.numParagraphs + "", cls: "tlfFileInfoValueNumber" });
+			}
+
+			if ( this.plugin.settings.showCurrentLines ) {
+
+				const row23 = tlfTable4.createEl("div", { cls: "tlfFileInfoRow" } );
+			
+					const cell37 = row23.createEl("div","tlfFileInfoCell");
+					cell37.createEl("div", { text: "Lines", cls: "tlfFileInfoLabel" });
+
+					const cell38 = row23.createEl("div","tlfFileInfoCell");
+					cell38.createEl("div", { text: "" + this.numLines + "", cls: "tlfFileInfoValueNumber" });
 			}
 
 			if ( this.plugin.settings.showCurrentPages ) {
@@ -332,7 +346,8 @@ export class tlfItemView extends ItemView {
 		if ( this.plugin.settings.showSelectedWords ||
 			this.plugin.settings.showSelectedCharacters ||
 			this.plugin.settings.showSelectedSentences ||
-			this.plugin.settings.showSelectedParagraphs ) {
+			this.plugin.settings.showSelectedParagraphs ||
+			this.plugin.settings.showSelectedLines ) {
 
 			const tlfTable5 = container.createEl("div", { cls: "tlfFileInfoTable" });
 
@@ -378,6 +393,17 @@ export class tlfItemView extends ItemView {
 
 					const cell29 = row17.createEl("div","tlfFileInfoCell");
 					cell29.createEl("div", { text: "" + this.numSelectedParagraphs + "", cls: "tlfFileInfoValueNumber" });
+			}
+
+			if ( this.plugin.settings.showSelectedLines ) {
+
+				const row24 = tlfTable5.createEl("div", { cls: "tlfFileInfoRow" } );
+			
+					const cell39 = row24.createEl("div","tlfFileInfoCell");
+					cell39.createEl("div", { text: "Selected Lines", cls: "tlfFileInfoLabel" });
+
+					const cell40 = row24.createEl("div","tlfFileInfoCell");
+					cell40.createEl("div", { text: "" + this.numSelectedLines + "", cls: "tlfFileInfoValueNumber" });
 			}
 
 		}

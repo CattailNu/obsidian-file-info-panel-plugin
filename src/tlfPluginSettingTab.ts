@@ -30,6 +30,7 @@ export interface tlfInterfaceSettings {
 	showCurrentCharacters: boolean;
 	showCurrentSentences: boolean;
 	showCurrentParagraphs: boolean;
+	showCurrentLines: boolean;
 
 	showCurrentPages: boolean;
 	wordsPerPage: number;
@@ -38,6 +39,7 @@ export interface tlfInterfaceSettings {
 	showSelectedCharacters: boolean;
 	showSelectedSentences: boolean;
 	showSelectedParagraphs: boolean;
+	showSelectedLines: boolean;
 	
 	showWordFrequency: boolean;
 	showURLFrequency: boolean;
@@ -62,6 +64,7 @@ export const tlfDefaultSettings = Object.freeze({
 	showCurrentCharacters: true,
 	showCurrentSentences: true,
 	showCurrentParagraphs: true,
+	showCurrentLines: true,
 
 	showCurrentPages: true,
 	wordsPerPage: 300,
@@ -70,6 +73,7 @@ export const tlfDefaultSettings = Object.freeze({
 	showSelectedCharacters: true,
 	showSelectedSentences: true,
 	showSelectedParagraphs: true,
+	showSelectedLines: true,
 	
 	showWordFrequency: true,
 	showURLFrequency: true,
@@ -236,6 +240,17 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 				});
 		});
 
+		new Setting(containerEl)
+			.setName("Show Line Count")
+			.setDesc("Show the document's line count.")
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.showCurrentLines);
+				cb.onChange(async (value: boolean) => {
+					this.plugin.settings.showCurrentLines = value;
+					await this.plugin.saveSettings();
+				});
+		});
+
 
 		new Setting(containerEl)
 			.setName("Show Page Count Estimate")
@@ -336,7 +351,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("Exclude URLs and Files From Word Frequency Report and Word Counts")
-			.setDesc("Exclude URLs and Files from the word-count parsers. Does not apply to characters, sentences, paragraphs, or pages.")
+			.setDesc("Exclude URLs and Files from the word-count parsers. Does not apply to characters, sentences, paragraphs, lines, or pages.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.excludeURLFromWordCounts);
 				cb.onChange(async (value: boolean) => {
@@ -390,6 +405,17 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 				cb.setValue(this.plugin.settings.showSelectedParagraphs);
 				cb.onChange(async (value: boolean) => {
 					this.plugin.settings.showSelectedParagraphs = value;
+					await this.plugin.saveSettings();
+				});
+		});
+
+		new Setting(containerEl)
+			.setName("Show Selected Line Count")
+			.setDesc("Show the document's selected text's line count.")
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.showSelectedLines);
+				cb.onChange(async (value: boolean) => {
+					this.plugin.settings.showSelectedLines = value;
 					await this.plugin.saveSettings();
 				});
 		});

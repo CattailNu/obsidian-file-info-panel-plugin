@@ -1,6 +1,6 @@
 # obsidian-file-info-panel-plugin
 
-This plugin for [Obsidian](https://obsidian.md/) creates a File Information view that displays the active file's date created, date modified, file size, and links to open the file in its native application and to open the file's folder.  It also has writing statistics (character, word, sentence, and paragraph counts) and a word frequency analysis.
+This plugin for [Obsidian](https://obsidian.md/) creates a File Information view that displays the active file's date created, date modified, file size, and links to open the file in its native application and to open the file's folder.  It also has writing statistics (character, word, sentence, paragraph, and line counts) and a word frequency analysis.
 
 ## Usage
 
@@ -22,8 +22,8 @@ The File Info Panel settings allows you to set which file information is display
 > 21 days ago
 
 - Writing statistics:
-	- Character, word, sentence, and paragraph counts.
-	- Selected text's character, word, sentence, and paragraph counts.
+	- Character, word, sentence, paragraph, and line counts.
+	- Selected text's character, word, sentence, paragraph, and line counts.
 	- Estimated page count based on your provided words per page.
 	- Word frequency analysis.  Optional split into two lists based on your provided regex.
 	- URLs and File names can be separate from Word counts.
@@ -44,6 +44,7 @@ The File Info Panel settings allows you to set which file information is display
 - **Show Word Count**: Display a word count for md and txt files.
 - **Show Sentence Count**: Display a sentence count for md and txt files.
 - **Show Paragraph Count**: Display a paragraph count for md and txt files. Does not include empty lines.
+- **Show Line Count**: Display a line count for md and txt files.
 
 - **Show Page Count Estimate**: Display a sentence count for md and txt files.
 - **Words Per Page**: Enter the estimated words per page to use in the page count calculation.
@@ -53,11 +54,12 @@ The File Info Panel settings allows you to set which file information is display
 - **Filter Regex**: Customize which words are split out of the main report. [Regex Assistance](https://cattail.nu/obsidian/filePluginRegexHelper.html)
 - **Show Filtered Words**: Show the words filtered by the above regex.
 - **Show a URL and File Frequency Report**: Shows mentioned URLs and files.
-- **Exclude URLs and Files From Word Frequency Report and Word Counts**: Excludes URLs and Files from the word-count parsers. Does not apply to characters, sentences, paragraphs, or pages.
+- **Exclude URLs and Files From Word Frequency Report and Word Counts**: Excludes URLs and Files from the word-count parsers. Does not apply to characters, sentences, paragraphs, lines, or pages.
 - **Show Selected Character Count**: Display a character count for selected text.
 - **Show Selected Word Count**: Display a word count for for selected text.
 - **Show Selected Sentence Count**: Display a sentence count for selected text.
 - **Show Selected Paragraph Count**: Display a paragraph count for selected text. Does not include empty lines.
+- **Show Selected Line Count**: Display a line count for selected text.
 
 ## Screenshots
 
@@ -298,5 +300,3 @@ Addition of document statistics.
 ### 1.0.1
 
 Initial release:  File name link, date modified, date created, full folder path link.
-
-

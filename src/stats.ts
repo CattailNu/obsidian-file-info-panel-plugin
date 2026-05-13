@@ -74,6 +74,11 @@ export function getParagraphCount(text: string): number {
   return paragraphs;
 }
 
+export function getLineCount(text: string): number {
+	if ( text == "" ) { return 0; }
+	return ((text || "").match(/\r\n|\r|\n/g) || []).length + 1;
+}
+
 function stripURLs(text: string): string {
 	const pattern = new RegExp(
 		[

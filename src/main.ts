@@ -39,7 +39,7 @@ import {
 	WorkspaceLeaf
 } from 'obsidian';
 import { VIEW_TYPE } from "./tlfConstants";
-import { getCharacterCount, getSentenceCount, getWordCount, getParagraphCount, getWordFrequencyArray, getURLFrequencyArray, cleanComments } from "./stats";
+import { getCharacterCount, getSentenceCount, getWordCount, getParagraphCount, getLineCount, getWordFrequencyArray, getURLFrequencyArray, cleanComments } from "./stats";
 //import type CodeMirror from "codemirror";
 //import { EditorView, ViewUpdate } from '@codemirror/view';
 //import { EditorState, Text } from '@codemirror/state';
@@ -162,8 +162,10 @@ export default class tlfFileInfo extends Plugin {
 						leaf.view.numCharacters = 0;
 						leaf.view.numSentences = 0;
 						leaf.view.numParagraphs = 0;
+						leaf.view.numLines = 0;
 						leaf.view.numSelectedWords = 0;
 						leaf.view.numSelectedParagraphs = 0;
+						leaf.view.numSelectedLines = 0;
 						leaf.view.numSelectedCharacters = 0;
 						leaf.view.numSelectedSentences = 0;
 						leaf.view.arrCurrentWordFrequency = [];
@@ -176,10 +178,12 @@ export default class tlfFileInfo extends Plugin {
 						var currentCharacters = 0;
 						var currentSentences = 0;
 						var currentParagraphs = 0;
+						var currentLines = 0;
 						var selectedWords = 0;
 						var selectedCharacters = 0;
 						var selectedSentences = 0;
 						var selectedParagraphs = 0;
+						var selectedLines = 0;
 						var currentWordFrequency = [];
 						var currentURLFrequency = [];
 	
@@ -190,6 +194,7 @@ export default class tlfFileInfo extends Plugin {
 								if ( this.settings.showCurrentCharacters ) { currentCharacters = getCharacterCount(data); }
 								if ( this.settings.showCurrentSentences ) { currentSentences = getSentenceCount(data); }
 								if ( this.settings.showCurrentParagraphs ) { currentParagraphs = getParagraphCount(data); }
+								if ( this.settings.showCurrentLines ) { currentLines = getLineCount(data); }
 								if ( this.settings.showWordFrequency ) { currentWordFrequency = getWordFrequencyArray(data, this.settings.excludeURLFromWordCounts); }
 								if ( this.settings.showURLFrequency ) { currentURLFrequency = getURLFrequencyArray(data); }
 	
@@ -198,7 +203,8 @@ export default class tlfFileInfo extends Plugin {
 							if ( this.settings.showSelectedWords ||
 								this.settings.showSelectedCharacters ||
 								this.settings.showSelectedSentences ||
-								this.settings.showSelectedParagraphs
+								this.settings.showSelectedParagraphs ||
+								this.settings.showSelectedLines
 							) {
 	/*
 								if ( ! this.intervalTimer ) {
@@ -223,6 +229,7 @@ export default class tlfFileInfo extends Plugin {
 												if ( this.settings.showSelectedCharacters ) { selectedCharacters = getCharacterCount(selectedData); }
 												if ( this.settings.showSelectedSentences ) { selectedSentences = getSentenceCount(selectedData); }
 												if ( this.settings.showSelectedParagraphs ) { selectedParagraphs = getParagraphCount(selectedData); }
+												if ( this.settings.showSelectedLines ) { selectedLines = getLineCount(selectedData); }
 											}
 										}
 									}
@@ -298,11 +305,13 @@ export default class tlfFileInfo extends Plugin {
 						leaf.view.numCharacters = currentCharacters;
 						leaf.view.numSentences = currentSentences;
 						leaf.view.numParagraphs = currentParagraphs;
+						leaf.view.numLines = currentLines;
 	
 						leaf.view.numSelectedWords = selectedWords;
 						leaf.view.numSelectedCharacters = selectedCharacters;
 						leaf.view.numSelectedSentences = selectedSentences;
 						leaf.view.numSelectedParagraphs = selectedParagraphs;
+						leaf.view.numSelectedLines = selectedLines;
 	
 						leaf.view.arrCurrentWordFrequency = currentWordFrequency;
 						leaf.view.arrCurrentURLFrequency = currentURLFrequency;
