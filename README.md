@@ -253,7 +253,7 @@ Featured: Make your own dreamcatcher graphics:
 Thank you to those who have taken the time to submit issues on github. Your feedback is helpful!
 
 ### 2.0
-- Update for the latest Obsidian app.
+- Update for the latest Obsidian app. Closed issues by adding front matter separation, status-bar popup window, and line counts.
 
 ### 1.3
 - Feature add: separate URLs from word counts and word frequency report. (Issue #9)
