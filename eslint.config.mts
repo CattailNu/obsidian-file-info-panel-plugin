@@ -3,32 +3,86 @@ import obsidianmd from "eslint-plugin-obsidianmd";
 import globals from "globals";
 import { globalIgnores } from "eslint/config";
 
-export default tseslint.config(
-	{
-		languageOptions: {
-			globals: {
-				...globals.browser,
-			},
-			parserOptions: {
-				projectService: {
-					allowDefaultProject: [
-						'eslint.config.js',
-						'manifest.json'
-					]
-				},
-				tsconfigRootDir: import.meta.dirname,
-				extraFileExtensions: ['.json']
-			},
+const sourceFiles = ["src/**/*.ts"];
+const sourceCodeFiles = ["src/**/*.ts", "src/**/*.js", "src/**/*.jsx"];
+const sourceLanguageOptions = {
+	globals: {
+		...globals.browser,
+	},
+	parserOptions: {
+		project: "./tsconfig.json",
+		tsconfigRootDir: import.meta.dirname,
+	},
+};
+
+const moduleInspectionRules = {
+	"@typescript-eslint/no-deprecated": "off",
+	"import/no-extraneous-dependencies": "off",
+	"import/no-nodejs-modules": "off",
+	"depend/ban-dependencies": "off",
+};
+
+const withSourceLanguageOptions = (config) => ({
+	...config,
+	languageOptions: {
+		...config.languageOptions,
+		globals: {
+			...sourceLanguageOptions.globals,
+			...config.languageOptions?.globals,
+		},
+		parserOptions: {
+			...config.languageOptions?.parserOptions,
+			...sourceLanguageOptions.parserOptions,
 		},
 	},
-	...obsidianmd.configs.recommended,
+});
+
+const sourceRecommended = [...obsidianmd.configs.recommended].flatMap((config) => {
+	if (config.files?.some((file) => file === "**/*.ts" || file === "**/*.tsx")) {
+		return [withSourceLanguageOptions({
+			...config,
+			files: sourceFiles,
+			extends: [tseslint.configs.recommended],
+			rules: {
+				...config.rules,
+				...moduleInspectionRules,
+			},
+		})];
+	}
+
+	if (config.files?.some((file) => file === "**/*.js" || file === "**/*.jsx")) {
+		return [{
+			...config,
+			files: ["src/**/*.js", "src/**/*.jsx"],
+			rules: {
+				...config.rules,
+				...moduleInspectionRules,
+			},
+		}];
+	}
+
+	if (!config.files) {
+		return [{
+			...config,
+			files: sourceCodeFiles,
+		}];
+	}
+
+	return [];
+});
+
+export default tseslint.config(
 	globalIgnores([
-		"node_modules",
-		"dist",
-		"esbuild.config.mjs",
-		"eslint.config.js",
-		"version-bump.mjs",
-		"versions.json",
-		"main.js",
+		"/*",
+		"!/src",
+		"!/src/**/*",
 	]),
+	...sourceRecommended,
+	{
+		files: sourceFiles,
+		languageOptions: sourceLanguageOptions,
+		rules: {
+			...moduleInspectionRules,
+		},
+	},
 );
