@@ -53,7 +53,7 @@ export default class tlfFileInfo extends Plugin {
 			(leaf) => new tlfItemView(leaf, this.app, this)
 		);
 
-		const ribbonIcon = this.addRibbonIcon('info', 'File info panel', (evt: MouseEvent) => {
+		this.addRibbonIcon('info', 'File info panel', (evt: MouseEvent) => {
 			// open or close the file info window
 			this.toggleView();
 		});
