@@ -7,7 +7,7 @@
 20230112 updated to include url frequency
  */
 
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, PluginSettingTab, Setting, TextAreaComponent, TextComponent, ToggleComponent } from "obsidian";
 
 import tlfFileInfo from "./main";
 
@@ -15,6 +15,12 @@ import tlfFileInfo from "./main";
 import { COMMON_ENGLISH_WORDS } from "./tlfConstants";
 
 //import { INTERVAL_MINUTES } from "./tlfConstants";
+
+function createSettingFragment(callback: (frag: DocumentFragment) => void): DocumentFragment {
+	const frag = document.createDocumentFragment();
+	callback(frag);
+	return frag;
+}
 
 
 export interface tlfInterfaceSettings {
@@ -178,7 +184,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Date format")
 			.setDesc(
-				createFragment((frag) => {
+				createSettingFragment((frag) => {
 					frag.appendText("Date format using moment.js token syntax. ");
 					frag.appendText("The human readable text will always be added. ");
 					frag.appendText("Use a single space to skip the first line formatted date and only see the human readable line.");
@@ -186,7 +192,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 					frag.createEl('a', {text: "https://momentjs.com/docs/#/displaying/", href: "https://momentjs.com/docs/#/displaying/"});
 				})
 			)
-			.addText((cb: TextAreaComponent) => {
+			.addText((cb: TextComponent) => {
 				cb.setPlaceholder("llll");
 				cb.setValue(this.plugin.settings.momentDateFormat);
 				cb.onChange((value: string) => {
@@ -318,12 +324,12 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Words per page")
 			.setDesc("Enter a number. How many words do you average per page?")
-			.addText((cb: TextAreaComponent) => {
+			.addText((cb: TextComponent) => {
 				cb.inputEl.setAttribute("type", "number");
 				cb.setPlaceholder("300");
-				cb.setValue(this.plugin.settings.wordsPerPage);
-				cb.onChange((value: number) => {
-					this.plugin.settings.wordsPerPage = value;
+				cb.setValue(String(this.plugin.settings.wordsPerPage));
+				cb.onChange((value: string) => {
+					this.plugin.settings.wordsPerPage = Number(value);
 					this.plugin.saveSettings();
 				});
 		});
@@ -360,7 +366,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Filter regex")
 			.setDesc(
-				createFragment((frag) => {
+				createSettingFragment((frag) => {
 					frag.appendText(
 						"Regex. Do not include the outside /'s."
 					);
@@ -372,7 +378,8 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 					frag.createEl('a', {text: "https://cattail.nu/obsidian/filePluginRegexHelper.html", href: "https://cattail.nu/obsidian/filePluginRegexHelper.html"});
 				})
 			)
-			.addText((cb: TextAreaComponent) => {
+			.addTextArea((cb: TextAreaComponent) => {
+				cb.inputEl.addClass("tlfFileInfoSettingsTextArea");
 				cb.setPlaceholder(COMMON_ENGLISH_WORDS);
 				cb.setValue(this.plugin.settings.filterRegex);
 				cb.onChange((value: string) => {

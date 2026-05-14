@@ -142,6 +142,11 @@
 	height: 8em;
 }
 
+.tlfFileInfoSettingsTextArea {
+	width: 100%;
+	min-height: 4em;
+}
+
 .tlfFileInfoStatusBar {
 	cursor: pointer;
 }
