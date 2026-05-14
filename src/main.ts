@@ -69,12 +69,9 @@ export default class tlfFileInfo extends Plugin {
 		await this.loadSettings();
 //		console.clear();
 
-		const a = this.app;
-		const p = this;
-
 		this.registerView(
 			VIEW_TYPE,
-			(leaf) => new tlfItemView(leaf, a, p)
+			(leaf) => new tlfItemView(leaf, this.app, this)
 		);
 
 		const ribbonIcon = this.addRibbonIcon('info', 'File Info Panel', (evt: MouseEvent) => {
@@ -520,4 +517,3 @@ export default class tlfFileInfo extends Plugin {
 	}
 
 }
-

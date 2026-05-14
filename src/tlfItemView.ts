@@ -82,10 +82,9 @@ export class tlfItemView extends ItemView {
 
 				const cell5 = row5.createEl("div","tlfFileInfoCell");
 				const bFile = cell5.createEl("p", { text: this.strDisplayFile, cls: "tlfFileInfoButton" });
-			const iv = this;
 
 			bFile.addEventListener("click", async (e) => {
-				this.app.openWithDefaultApp(iv.strFileOpen);
+				this.app.openWithDefaultApp(this.strFileOpen);
 			});
 		}
 
@@ -156,9 +155,8 @@ export class tlfItemView extends ItemView {
 					if ( folderPath.slice(-1) != '/' ) { folderPath += '/'; }
 				}
 				const bFolder = cell6.createEl("p", { text: folderPath, cls: "tlfFileInfoButton" });
-			const iv = this;
 			bFolder.addEventListener("click", async (e) => {
-				this.app.showInFolder(iv.strFileOpen);
+				this.app.showInFolder(this.strFileOpen);
 			});
 		}
 
