@@ -71,14 +71,14 @@ export default class tlfFileInfo extends Plugin {
 			(leaf) => new tlfItemView(leaf, this.app, this)
 		);
 
-		const ribbonIcon = this.addRibbonIcon('info', 'File Info Panel', (evt: MouseEvent) => {
+		const ribbonIcon = this.addRibbonIcon('info', 'File info panel', (evt: MouseEvent) => {
 			// open or close the file info window
 			this.toggleView();
 		});
 
 		this.addCommand({
 			id: 'form-info-toggle-window',
-			name: 'Toggle Panel',
+			name: 'Toggle panel',
 			callback: () => {
 				// open or close the file info window
 				this.toggleView();
@@ -87,7 +87,7 @@ export default class tlfFileInfo extends Plugin {
 
 		this.addCommand({
 			id: 'form-info-show-window',
-			name: 'Show Panel',
+			name: 'Show panel',
 			callback: () => {
 				// open the file info window
 				this.activateView();
@@ -96,7 +96,7 @@ export default class tlfFileInfo extends Plugin {
 
 		this.addCommand({
 			id: 'form-info-hide-window',
-			name: 'Hide Panel',
+			name: 'Hide panel',
 			callback: () => {
 				// close the file info window
 				this.deactivateView();

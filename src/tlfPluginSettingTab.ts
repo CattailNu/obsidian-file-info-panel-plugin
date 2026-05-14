@@ -111,7 +111,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName("File Info Panel Settings")
+			.setName("File info panel settings")
 			.setHeading();
 	//	containerEl.createEl('p', {text: 'Reload required for changes to take effect.'});
 
@@ -120,7 +120,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 			.setHeading();
 
 		new Setting(containerEl)
-			.setName("Show Panel")
+			.setName("Show panel")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showPanel);
 				cb.onChange(async (value: boolean) => {
@@ -135,7 +135,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Status Bar Popup")
+			.setName("Show status bar popup")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showStatusBarPopup);
 				cb.onChange(async (value: boolean) => {
@@ -150,11 +150,11 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("File Information")
+			.setName("File information")
 			.setHeading();
 
 		new Setting(containerEl)
-			.setName("Show Date Created")
+			.setName("Show date created")
 			.setDesc("Show the date created for the active document.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showCreated);
@@ -165,7 +165,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Date Modified")
+			.setName("Show date modified")
 			.setDesc("Show the date modified for the active document.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showModified);
@@ -176,7 +176,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Date Format")
+			.setName("Date format")
 			.setDesc(
 				createFragment((frag) => {
 					frag.appendText("Date format using moment.js token syntax. ");
@@ -198,7 +198,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 
 
 		new Setting(containerEl)
-			.setName("Show File Size")
+			.setName("Show file size")
 			.setDesc("Show the file size for the active document.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showSize);
@@ -209,7 +209,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show File")
+			.setName("Show file")
 			.setDesc("Show a link to open the active document in its default application.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showFile);
@@ -220,7 +220,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Folder")
+			.setName("Show folder")
 			.setDesc("Show a link to open the folder that contains the active document.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showFolder);
@@ -231,7 +231,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Folder as Relative Path")
+			.setName("Show folder as relative path")
 			.setDesc("Show the folder as relative to the vault rather than the file system. Clicking will still open to the file system.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showRelativeFolder);
@@ -243,13 +243,13 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 
 
 		new Setting(containerEl)
-			.setName("Document Statistics")
+			.setName("Document statistics")
 			.setHeading();
 
-		containerEl.createEl('p', {text: 'The following settings only work for the currently open document and only for md and txt files. Toggle the File Info Panel visibility if you change these settings.'});
+		containerEl.createEl('p', {text: 'The following settings only work for the currently open document and only for md and txt files. Toggle the visibility if you change these settings.'});
 
 		new Setting(containerEl)
-			.setName("Show Character Count")
+			.setName("Show character count")
 			.setDesc("Show the document's character count.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showCurrentCharacters);
@@ -260,7 +260,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Word Count")
+			.setName("Show word count")
 			.setDesc("Show the document's word count.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showCurrentWords);
@@ -271,7 +271,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Sentence Count")
+			.setName("Show sentence count")
 			.setDesc("Show the document's sentence count.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showCurrentSentences);
@@ -282,7 +282,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Paragraph Count")
+			.setName("Show paragraph count")
 			.setDesc("Show the document's paragraph count. This does not count empty lines.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showCurrentParagraphs);
@@ -293,7 +293,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Line Count")
+			.setName("Show line count")
 			.setDesc("Show the document's line count.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showCurrentLines);
@@ -305,7 +305,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 
 
 		new Setting(containerEl)
-			.setName("Show Page Count Estimate")
+			.setName("Show page count estimate")
 			.setDesc("Show the document's page count, based on the words per page setting.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showCurrentPages);
@@ -316,8 +316,8 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Words Per Page")
-			.setDesc("Enter a Number. How many words do you average per page?")
+			.setName("Words per page")
+			.setDesc("Enter a number. How many words do you average per page?")
 			.addText((cb: TextAreaComponent) => {
 				cb.inputEl.setAttribute("type", "number");
 				cb.setPlaceholder("300");
@@ -329,13 +329,13 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Document Word Frequency")
+			.setName("Document word frequency")
 			.setHeading();
 
-		containerEl.createEl('p', {text: "The following settings only work for the currently open document and only for md and txt files. The extra calculations may affect Obsidian's performance, depending on the size of your documents and your system. Toggle the File Info Panel visibility if you change these settings."});
+		containerEl.createEl('p', {text: "The following settings only work for the currently open document and only for md and txt files. The extra calculations may affect obsidian's performance, depending on the size of your documents and your system. Toggle the visibility if you change these settings."});
 
 		new Setting(containerEl)
-			.setName("Show a Word Frequency Report")
+			.setName("Show a word frequency report")
 			.setDesc("Show a grid of words you use by frequency.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showWordFrequency);
@@ -346,8 +346,8 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Filter Word Frequency Report")
-			.setDesc("Filter (separate) the word frequency report using the following Regex.")
+			.setName("Filter word frequency report")
+			.setDesc("Filter (separate) the word frequency report using the following regex.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.filterFrequency);
 				cb.onChange(async (value: boolean) => {
@@ -358,7 +358,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 
 
 		new Setting(containerEl)
-			.setName("Filter Regex")
+			.setName("Filter regex")
 			.setDesc(
 				createFragment((frag) => {
 					frag.appendText(
@@ -382,7 +382,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Filtered Words")
+			.setName("Show filtered words")
 			.setDesc("Show the words filtered by the above regex.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showFilteredWords);
@@ -393,8 +393,8 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show a URL and File Frequency Report")
-			.setDesc("Show a grid of URLs and Files you mention by frequency.")
+			.setName("Show a url and file frequency report")
+			.setDesc("Show a grid of urls and files you mention by frequency.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showURLFrequency);
 				cb.onChange(async (value: boolean) => {
@@ -404,8 +404,8 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Exclude URLs and Files From Word Frequency Report and Word Counts")
-			.setDesc("Exclude URLs and Files from the word-count parsers. Does not apply to characters, sentences, paragraphs, lines, or pages.")
+			.setName("Exclude urls and files from word frequency report and word counts")
+			.setDesc("Exclude urls and files from the word-count parsers. Does not apply to characters, sentences, paragraphs, lines, or pages.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.excludeURLFromWordCounts);
 				cb.onChange(async (value: boolean) => {
@@ -416,13 +416,13 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 
 
 		new Setting(containerEl)
-			.setName("Document Selected Text Statistics")
+			.setName("Document selected text statistics")
 			.setHeading();
 
-		containerEl.createEl('p', {text: "The following settings only work for the currently open document and only for md and txt files. The extra calculations may affect Obsidian's performance, depending on the size of your documents and your system. Toggle the File Info Panel visibility if you change these settings."});
+		containerEl.createEl('p', {text: "The following settings only work for the currently open document and only for md and txt files. The extra calculations may affect obsidian's performance, depending on the size of your documents and your system. Toggle the visibility if you change these settings."});
 
 		new Setting(containerEl)
-			.setName("Show Selected Character Count")
+			.setName("Show selected character count")
 			.setDesc("Show the document's selected text's character count.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showSelectedCharacters);
@@ -433,7 +433,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Selected Word Count")
+			.setName("Show selected word count")
 			.setDesc("Show the document's selected text's word count.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showSelectedWords);
@@ -444,7 +444,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Selected Sentence Count")
+			.setName("Show selected sentence count")
 			.setDesc("Show the document's selected text's sentence count.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showSelectedSentences);
@@ -455,7 +455,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Selected Paragraph Count")
+			.setName("Show selected paragraph count")
 			.setDesc("Show the document's selected text's paragraph count. This does not count empty lines.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showSelectedParagraphs);
@@ -466,7 +466,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Selected Line Count")
+			.setName("Show selected line count")
 			.setDesc("Show the document's selected text's line count.")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showSelectedLines);
@@ -477,14 +477,14 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Front Matter")
+			.setName("Front matter")
 			.setHeading();
 
-		containerEl.createEl('p', {text: 'Front Matter is defined by --- at the top of the file, followed by the properties, and ending with ---.'});
+		containerEl.createEl('p', {text: 'Front matter is defined by --- at the top of the file, followed by the properties, and ending with ---.'});
 
 		new Setting(containerEl)
-			.setName("Include Front Matter as Text")
-			.setDesc("Includes Front Matter in all operations (counts, filters, etc.).")
+			.setName("Include front matter as text")
+			.setDesc("Includes front matter in all operations (counts, filters, etc.).")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.includeFrontMatterAsText);
 				cb.onChange(async (value: boolean) => {
@@ -494,7 +494,7 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 		new Setting(containerEl)
-			.setName("Show Front Matter in Panel")
+			.setName("Show front matter in panel")
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.showFrontMatterInPanel);
 				cb.onChange(async (value: boolean) => {

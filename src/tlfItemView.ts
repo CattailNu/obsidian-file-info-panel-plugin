@@ -118,7 +118,7 @@ export class tlfItemView extends ItemView {
 			const row18 = tlfTable.createEl("div", { cls: "tlfFileInfoRow" } );
 
 				const cell30 = row18.createEl("div","tlfFileInfoCell");
-				cell30.createEl("div", { text: "Image Width", cls: "tlfFileInfoLabel" });
+				cell30.createEl("div", { text: "Image width", cls: "tlfFileInfoLabel" });
 
 				const cell31 = row18.createEl("div","tlfFileInfoCell");
 				cell31.createEl("div", { text: String(this.numImageWidth), cls: "tlfFileInfoValue" });
@@ -126,7 +126,7 @@ export class tlfItemView extends ItemView {
 			const row19 = tlfTable.createEl("div", { cls: "tlfFileInfoRow" } );
 
 				const cell32 = row19.createEl("div","tlfFileInfoCell");
-				cell32.createEl("div", { text: "Image Height", cls: "tlfFileInfoLabel" });
+				cell32.createEl("div", { text: "Image height", cls: "tlfFileInfoLabel" });
 
 				const cell33 = row19.createEl("div","tlfFileInfoCell");
 				cell33.createEl("div", { text: String(this.numImageHeight), cls: "tlfFileInfoValue" });
@@ -168,7 +168,7 @@ export class tlfItemView extends ItemView {
 			const tlfTable9 = container.createEl("div", { cls: "tlfFileInfoTable100" });
 				const row25 = tlfTable9.createEl("div", { cls: "tlfFileInfoRow" } );
 					const cell41 = row25.createEl("div","tlfFileInfoCell");
-					cell41.createEl("div", { text: "Front Matter", cls: "tlfFileInfoLabel" });
+					cell41.createEl("div", { text: "Front matter", cls: "tlfFileInfoLabel" });
 
 				const row26 = tlfTable9.createEl("div", { cls: "tlfFileInfoRow" } );
 					const cell42 = row26.createEl("div","tlfFileInfoCell");
@@ -252,7 +252,7 @@ export class tlfItemView extends ItemView {
 					let estPages = "";
 					if ( (typeof wordsPerPage !== "number" || isNaN(wordsPerPage)) ||
 						(typeof currentWords !== "number" || isNaN(currentWords)) ) {
-						estPages = "Words Per Page Setting Is Not Valid";
+						estPages = "Words per page setting is not valid.";
 					} else {
 						if ( wordsPerPage < 1 ) { wordsPerPage = 1 };
 						let eP = Number(this.numWords) / wordsPerPage;
@@ -301,7 +301,7 @@ export class tlfItemView extends ItemView {
 			const tlfTable6 = container.createEl("div", { cls: "tlfFileInfoTable100" });
 				const row13 = tlfTable6.createEl("div", { cls: "tlfFileInfoRow" } );
 					const cell23 = row13.createEl("div","tlfFileInfoCell");
-					cell23.createEl("div", { text: "Word Frequency" + ((this.plugin.settings.excludeURLFromWordCounts)?"*":""), cls: "tlfFileInfoLabel" });
+					cell23.createEl("div", { text: "Word frequency" + ((this.plugin.settings.excludeURLFromWordCounts)?"*":""), cls: "tlfFileInfoLabel" });
 
 				const row14 = tlfTable6.createEl("div", { cls: "tlfFileInfoRow" } );
 					const cell24 = row14.createEl("div","tlfFileInfoCell");
@@ -311,7 +311,7 @@ export class tlfItemView extends ItemView {
 
 					const row15 = tlfTable6.createEl("div", { cls: "tlfFileInfoRow" } );
 						const cell25 = row15.createEl("div","tlfFileInfoCell");
-						cell25.createEl("div", { text: "Filtered by Setting:", cls: "tlfFileInfoLabel" });
+						cell25.createEl("div", { text: "Filtered by setting:", cls: "tlfFileInfoLabel" });
 						cell25.createEl("textarea", { text: reportRegex, cls: "tlfFileInfoTextArea" });
 				}		
 		}
@@ -348,7 +348,7 @@ export class tlfItemView extends ItemView {
 			const tlfTable7 = container.createEl("div", { cls: "tlfFileInfoTable100" });
 				const row20 = tlfTable7.createEl("div", { cls: "tlfFileInfoRow" } );
 					const cell34 = row20.createEl("div","tlfFileInfoCell");
-					cell34.createEl("div", { text: "URLs and Files Mentioned" + ((this.plugin.settings.excludeURLFromWordCounts)?"*":""), cls: "tlfFileInfoLabel" });
+					cell34.createEl("div", { text: "URLs and files mentioned" + ((this.plugin.settings.excludeURLFromWordCounts)?"*":""), cls: "tlfFileInfoLabel" });
 
 				const row21 = tlfTable7.createEl("div", { cls: "tlfFileInfoRow" } );
 					const cell35 = row21.createEl("div","tlfFileInfoCell");
@@ -369,7 +369,7 @@ export class tlfItemView extends ItemView {
 				const row9 = tlfTable5.createEl("div", { cls: "tlfFileInfoRow" } );
 			
 					const cell15 = row9.createEl("div","tlfFileInfoCell");
-					cell15.createEl("div", { text: "Selected Characters", cls: "tlfFileInfoLabel" });
+					cell15.createEl("div", { text: "Selected characters", cls: "tlfFileInfoLabel" });
 
 					const cell16 = row9.createEl("div","tlfFileInfoCell");
 					cell16.createEl("div", { text: "" + this.numSelectedCharacters + "", cls: "tlfFileInfoValueNumber" });
@@ -380,7 +380,7 @@ export class tlfItemView extends ItemView {
 				const row10 = tlfTable5.createEl("div", { cls: "tlfFileInfoRow" } );
 
 					const cell17 = row10.createEl("div","tlfFileInfoCell");
-					cell17.createEl("div", { text: "Selected Words" + ((this.plugin.settings.excludeURLFromWordCounts)?"*":""), cls: "tlfFileInfoLabel" });
+					cell17.createEl("div", { text: "Selected words" + ((this.plugin.settings.excludeURLFromWordCounts)?"*":""), cls: "tlfFileInfoLabel" });
 
 					const cell18 = row10.createEl("div","tlfFileInfoCell");
 					cell18.createEl("div", { text: "" + this.numSelectedWords + "", cls: "tlfFileInfoValueNumber" });
@@ -391,7 +391,7 @@ export class tlfItemView extends ItemView {
 				const row11 = tlfTable5.createEl("div", { cls: "tlfFileInfoRow" } );
 			
 					const cell19 = row11.createEl("div","tlfFileInfoCell");
-					cell19.createEl("div", { text: "Selected Sentences", cls: "tlfFileInfoLabel" });
+					cell19.createEl("div", { text: "Selected sentences", cls: "tlfFileInfoLabel" });
 
 					const cell20 = row11.createEl("div","tlfFileInfoCell");
 					cell20.createEl("div", { text: "" + this.numSelectedSentences + "", cls: "tlfFileInfoValueNumber" });
@@ -402,7 +402,7 @@ export class tlfItemView extends ItemView {
 				const row17 = tlfTable5.createEl("div", { cls: "tlfFileInfoRow" } );
 			
 					const cell28 = row17.createEl("div","tlfFileInfoCell");
-					cell28.createEl("div", { text: "Selected Paragraphs", cls: "tlfFileInfoLabel" });
+					cell28.createEl("div", { text: "Selected paragraphs", cls: "tlfFileInfoLabel" });
 
 					const cell29 = row17.createEl("div","tlfFileInfoCell");
 					cell29.createEl("div", { text: "" + this.numSelectedParagraphs + "", cls: "tlfFileInfoValueNumber" });
@@ -413,7 +413,7 @@ export class tlfItemView extends ItemView {
 				const row24 = tlfTable5.createEl("div", { cls: "tlfFileInfoRow" } );
 			
 					const cell39 = row24.createEl("div","tlfFileInfoCell");
-					cell39.createEl("div", { text: "Selected Lines", cls: "tlfFileInfoLabel" });
+					cell39.createEl("div", { text: "Selected lines", cls: "tlfFileInfoLabel" });
 
 					const cell40 = row24.createEl("div","tlfFileInfoCell");
 					cell40.createEl("div", { text: "" + this.numSelectedLines + "", cls: "tlfFileInfoValueNumber" });
@@ -434,7 +434,7 @@ export class tlfItemView extends ItemView {
 					const cell36 = row22.createEl("div","tlfFileInfoParagraph");
 					cell36.createEl("div", { text: 
 					((this.plugin.settings.excludeURLFromWordCounts)?"*":"") + 
-					"Words and word counts exclude URLs and Files. Change in settings.", 
+					"Words and word counts exclude URLs and files. Change in settings.", 
 					cls: "tlfFileInfoLabel" });
 
 		}
@@ -446,7 +446,7 @@ export class tlfItemView extends ItemView {
 	}
 
 	getDisplayText() {
-		return "File Info View";
+		return "File info view";
 	}
 
 	async onOpen() {
