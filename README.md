@@ -252,10 +252,13 @@ Featured: Make your own dreamcatcher graphics:
 
 Thank you to those who have taken the time to submit issues on github. Your feedback is helpful!
 
-### 2.0
+### 2.0.1
+- Basic lint-housekeeping.
+
+### 2.0.0
 - Update for the latest Obsidian app. Closed issues by adding front matter separation, status-bar popup window, and line counts.
 
-### 1.3
+### 1.3.0
 - Feature add: separate URLs from word counts and word frequency report. (Issue #9)
 - Feature add: open and close items for hotkeys. (Issue #10)
 - Feature add: show image width/height for images.  (Issue #11)
