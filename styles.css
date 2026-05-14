@@ -100,7 +100,6 @@
 	display: table-cell;
 	border: none;
 	margin: 0px;
-	padding: 0.3em;
 	text-align: left;
 	margin-left: 0.5em;
 	padding: 0em;
@@ -123,7 +122,6 @@
 	font-size: 0.7em;
 	background:none;
 	color: var(--text-muted);
-	height: 2em;
 	width:100%;
 	max-width:100%;
 	height:auto;

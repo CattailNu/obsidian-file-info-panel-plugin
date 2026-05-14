@@ -17,11 +17,10 @@ Versioning: https://semver.org
 
 /*
 import {App, Editor, MarkdownView, Modal, Notice, Plugin} from 'obsidian';
-import {DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab} from "./settings";
+import {DEFAULT_SETTINGS, FileInfoSettings, FileInfoSettingTab} from "./settings";
 */
 
 import {
-	App,
 	arrayBufferToBase64,
 	Editor,
 	FileSystemAdapter,
@@ -33,8 +32,6 @@ import {
 	Notice,
 	normalizePath,
 	Plugin,
-	PluginSettingTab,
-	Setting,
 	TFile,
 	WorkspaceLeaf
 } from 'obsidian';
@@ -137,8 +134,8 @@ export default class tlfFileInfo extends Plugin {
 				if (timer === undefined && immed) {
 					fn.apply(this, args);
 				}
-				clearTimeout(timer);
-				timer = setTimeout(() => fn.apply(this, args), n);
+				window.clearTimeout(timer);
+				timer = window.setTimeout(() => fn.apply(this, args), n);
 				return timer;
 			}
 		};
