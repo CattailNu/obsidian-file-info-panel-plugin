@@ -5,7 +5,7 @@ export interface FileInfoSettings {
 	mySetting: string;
 }
 
-export const DEFAULT_SETTINGS: MyPluginSettings = {
+export const DEFAULT_SETTINGS: FileInfoSettings = {
 	mySetting: 'default'
 }
 
