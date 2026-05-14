@@ -10,7 +10,7 @@
 
 */
 
-import { App, Command, ItemView, Plugin, WorkspaceLeaf } from 'obsidian';
+import { App, ItemView, WorkspaceLeaf } from 'obsidian';
 
 import { VIEW_TYPE } from "./tlfConstants";
 

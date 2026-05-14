@@ -15,32 +15,14 @@ Versioning: https://semver.org
 /* T. L. Ford */
 /* https://www.Cattail.Nu */
 
-/*
-import {App, Editor, MarkdownView, Modal, Notice, Plugin} from 'obsidian';
-import {DEFAULT_SETTINGS, FileInfoSettings, FileInfoSettingTab} from "./settings";
-*/
-
 import {
-	arrayBufferToBase64,
-	Editor,
-	FileSystemAdapter,
-	ItemView,
 	MarkdownView,
-	MetadataCache,
-	Modal,
 	moment,
-	Notice,
 	normalizePath,
-	Plugin,
-	TFile,
-	WorkspaceLeaf
+	Plugin
 } from 'obsidian';
 import { VIEW_TYPE } from "./tlfConstants";
-import { getCharacterCount, getSentenceCount, getWordCount, getParagraphCount, getLineCount, getFrontMatterText, stripFrontMatter, getWordFrequencyArray, getURLFrequencyArray, cleanComments } from "./stats";
-//import type CodeMirror from "codemirror";
-//import { EditorView, ViewUpdate } from '@codemirror/view';
-//import { EditorState, Text } from '@codemirror/state';
-import * as CodeMirror from 'codemirror';
+import { getCharacterCount, getSentenceCount, getWordCount, getParagraphCount, getLineCount, getFrontMatterText, stripFrontMatter, getWordFrequencyArray, getURLFrequencyArray } from "./stats";
 
 import {
 	tlfPluginSettingTab,
