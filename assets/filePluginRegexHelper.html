@@ -260,7 +260,7 @@ https://www.bestcssbuttongenerator.com/#/28
 		"use strict";
 
 		function copyOutput() {
-			var el = document.getElementById("output");
+			const el = document.getElementById("output");
 			el.select(); 
 			el.setSelectionRange(0, 99999); /* For mobile devices */
 			//navigator.clipboard.writeText(el.value);
@@ -269,10 +269,10 @@ https://www.bestcssbuttongenerator.com/#/28
 		}
 
 		function inputChanged() {
-			var txt = document.getElementById("input").value;
-			var newText = "";
-			var arr = txt.split(",");
-			for (var i in arr) {
+			const txt = document.getElementById("input").value;
+			let newText = "";
+			const arr = txt.split(",");
+			for (const i in arr) {
 				if ( arr[i].trim().length > 0 ) {
 					newText += "(\\b" + arr[i].trim() + "\\b)|";
 				}

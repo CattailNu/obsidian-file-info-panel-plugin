@@ -69,8 +69,8 @@ export default class tlfFileInfo extends Plugin {
 		await this.loadSettings();
 //		console.clear();
 
-		var a = this.app;
-		var p = this;
+		const a = this.app;
+		const p = this;
 
 		this.registerView(
 			VIEW_TYPE,
@@ -147,13 +147,12 @@ export default class tlfFileInfo extends Plugin {
 		};
 		
 		const requeryStats = debounce(1000, async () => {
-			var file = this.app.workspace.getActiveFile();
-			var data = "";
-			var isText = 0;
-			var isImage = 0;
-			var imageWidth = 0;
-			var imageHeight = 0;
-			var img;
+			const file = this.app.workspace.getActiveFile();
+			let data = "";
+			let isText = 0;
+			let isImage = 0;
+			const imageWidth = 0;
+			const imageHeight = 0;
 	
 			if ( file && file.extension && (String(file.extension).toLowerCase() === "md" || String(file.extension).toLowerCase() === "txt") ) {
 				isText = 1;
@@ -164,7 +163,7 @@ export default class tlfFileInfo extends Plugin {
 			// https://github.com/mvdkwast/obsidian-copy-as-html/blob/master/main.ts
 
 			// not supporting svg image width/height
-			var imageExtensions = ['gif', 'png', 'jpg', 'jpeg', 'bmp', 'png', 'webp', 'tiff'];
+			const imageExtensions = ['gif', 'png', 'jpg', 'jpeg', 'bmp', 'png', 'webp', 'tiff'];
 			if (file && file.extension && imageExtensions.includes(String(file.extension).toLowerCase())) {
 				isImage = 1;
 				//data = await this.app.vault.cachedRead(file);
@@ -173,23 +172,23 @@ export default class tlfFileInfo extends Plugin {
 			this.currentFileInfo = this.createFileInfoData();
 
 			if ( file ) {
-				var currentWords = 0;
-				var currentCharacters = 0;
-				var currentSentences = 0;
-				var currentParagraphs = 0;
-				var currentLines = 0;
-				var selectedWords = 0;
-				var selectedCharacters = 0;
-				var selectedSentences = 0;
-				var selectedParagraphs = 0;
-				var selectedLines = 0;
-				var currentFrontMatter: string | null = null;
-				var currentWordFrequency = [];
-				var currentURLFrequency = [];
+				let currentWords = 0;
+				let currentCharacters = 0;
+				let currentSentences = 0;
+				let currentParagraphs = 0;
+				let currentLines = 0;
+				let selectedWords = 0;
+				let selectedCharacters = 0;
+				let selectedSentences = 0;
+				let selectedParagraphs = 0;
+				let selectedLines = 0;
+				let currentFrontMatter: string | null = null;
+				let currentWordFrequency = [];
+				let currentURLFrequency = [];
 
 				if (String(file.extension).toLowerCase() === "md" || String(file.extension).toLowerCase() === "txt") {
 					if ( data ) {
-						var statData = this.settings.includeFrontMatterAsText ? data : stripFrontMatter(data);
+						const statData = this.settings.includeFrontMatterAsText ? data : stripFrontMatter(data);
 						if ( this.settings.showCurrentWords ) { currentWords = getWordCount(statData, this.settings.excludeURLFromWordCounts); }
 						if ( this.settings.showCurrentCharacters ) { currentCharacters = getCharacterCount(statData); }
 						if ( this.settings.showCurrentSentences ) { currentSentences = getSentenceCount(statData); }
@@ -206,7 +205,7 @@ export default class tlfFileInfo extends Plugin {
 						this.settings.showSelectedParagraphs ||
 						this.settings.showSelectedLines
 					) {
-						var selectedData = "";
+						let selectedData = "";
 
 						const v = this.app.workspace.getActiveViewOfType(MarkdownView);
 						if ( v ) {
@@ -216,7 +215,7 @@ export default class tlfFileInfo extends Plugin {
 								if ( v.getMode() === "source" ) {
 									if ( v.editor.somethingSelected() ) {
 										selectedData = v.editor.getSelection();
-										var selectedStatData = this.settings.includeFrontMatterAsText ? selectedData : stripFrontMatter(selectedData);
+										const selectedStatData = this.settings.includeFrontMatterAsText ? selectedData : stripFrontMatter(selectedData);
 										if ( this.settings.showSelectedWords ) { selectedWords = getWordCount(selectedStatData, this.settings.excludeURLFromWordCounts); }
 										if ( this.settings.showSelectedCharacters ) { selectedCharacters = getCharacterCount(selectedStatData); }
 										if ( this.settings.showSelectedSentences ) { selectedSentences = getSentenceCount(selectedStatData); }
@@ -229,11 +228,11 @@ export default class tlfFileInfo extends Plugin {
 					}
 				}
 
-				var cDate = moment.unix(file.stat.ctime/1000);
-				var cString = cDate.format(this.settings.momentDateFormat);
+				const cDate = moment.unix(file.stat.ctime/1000);
+				const cString = cDate.format(this.settings.momentDateFormat);
 				
-				var mDate = moment.unix(file.stat.mtime/1000);
-				var mString = mDate.format(this.settings.momentDateFormat);
+				const mDate = moment.unix(file.stat.mtime/1000);
+				const mString = mDate.format(this.settings.momentDateFormat);
 
 				this.currentFileInfo.isText = isText;
 				this.currentFileInfo.strCreated = cString;
@@ -273,7 +272,7 @@ export default class tlfFileInfo extends Plugin {
 					urlPath = encodeURIComponent(urlPath);
 					urlPath = "app://local/" + this.app.vault.adapter.basePath.replace(/\\/g, '/') + this.currentFileInfo.strRelativePath.replace(/\\/g, '/') + urlPath;
 
-					img = new Image();
+					const img = new Image();
 					img.setAttribute('crossOrigin', 'anonymous');
 					img.onload = () => {
 						this.currentFileInfo.numImageWidth = img.naturalWidth;
@@ -494,7 +493,7 @@ export default class tlfFileInfo extends Plugin {
 			}
 			return;
 		}
-		var found = false;
+		let found = false;
 		this.app.workspace.getLeavesOfType(VIEW_TYPE).forEach((leaf) => {
 			if (leaf.view instanceof tlfItemView) {
 				this.deactivateView();

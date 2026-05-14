@@ -61,7 +61,7 @@ export function cleanComments(text: string): string {
 // Added by T. L. Ford:
 
 export function getParagraphCount(text: string): number {
-  var paragraphs: number = (
+  let paragraphs: number = (
     (text || "").match(
       /^(.)+(\n)/gm
     ) || []
@@ -107,18 +107,18 @@ export function getURLFrequencyArray(text: string): [string] {
 		].join("|"),
 		"g"
 	);
-	var array = (text.match(pattern) || []);
+	const array = (text.match(pattern) || []);
 
-	for (var i in array) {
+	for (const i in array) {
 		array[i] = String(array[i]).toLowerCase();
 	}
 		
-	var keyValue = array.reduce(function (acc, curr) {
+	const keyValue = array.reduce(function (acc, curr) {
 		return acc[curr] ? ++acc[curr] : acc[curr] = 1, acc
 	}, {});
 
-	var urlFrequencyArray = [];
-	for (var key in keyValue) {
+	const urlFrequencyArray = [];
+	for (const key in keyValue) {
 		urlFrequencyArray.push([key, keyValue[key]]);
 	}
 
@@ -169,18 +169,18 @@ export function getWordFrequencyArray(text: string, excludeURLFromWordCounts: bo
 		].join("|"),
 		"g"
 	);
-	var array = (text.match(pattern) || []);
+	const array = (text.match(pattern) || []);
 
-	for (var i in array) {
+	for (const i in array) {
 		array[i] = String(array[i]).toLowerCase();
 	}
 		
-	var keyValue = array.reduce(function (acc, curr) {
+	const keyValue = array.reduce(function (acc, curr) {
 		return acc[curr] ? ++acc[curr] : acc[curr] = 1, acc
 	}, {});
 
-	var wordFrequencyArray = [];
-	for (var key in keyValue) {
+	const wordFrequencyArray = [];
+	for (const key in keyValue) {
 		wordFrequencyArray.push([key, keyValue[key]]);
 	}
 

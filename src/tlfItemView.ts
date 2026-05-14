@@ -82,7 +82,7 @@ export class tlfItemView extends ItemView {
 
 				const cell5 = row5.createEl("div","tlfFileInfoCell");
 				const bFile = cell5.createEl("p", { text: this.strDisplayFile, cls: "tlfFileInfoButton" });
-			var iv = this;
+			const iv = this;
 
 			bFile.addEventListener("click", async (e) => {
 				this.app.openWithDefaultApp(iv.strFileOpen);
@@ -150,15 +150,13 @@ export class tlfItemView extends ItemView {
 			const row6 = tlfTable3.createEl("div", { cls: "tlfFileInfoRow" } );
 
 				const cell6 = row6.createEl("div","tlfFileInfoCellButton");
-				var bFolder;
+				let folderPath = this.strDisplayFolder;
 				if ( this.plugin.settings.showRelativeFolder ) {
-					var rPath = this.strRelativePath;
-					if ( rPath.slice(-1) != '/' ) { rPath += '/'; }
-					bFolder = cell6.createEl("p", { text: rPath, cls: "tlfFileInfoButton" });
-				} else {
-					bFolder = cell6.createEl("p", { text: this.strDisplayFolder, cls: "tlfFileInfoButton" });
+					folderPath = this.strRelativePath;
+					if ( folderPath.slice(-1) != '/' ) { folderPath += '/'; }
 				}
-			var iv = this;
+				const bFolder = cell6.createEl("p", { text: folderPath, cls: "tlfFileInfoButton" });
+			const iv = this;
 			bFolder.addEventListener("click", async (e) => {
 				this.app.showInFolder(iv.strFileOpen);
 			});
@@ -250,10 +248,10 @@ export class tlfItemView extends ItemView {
 					const cell21 = row12.createEl("div","tlfFileInfoCell");
 					cell21.createEl("div", { text: "Est. Pages", cls: "tlfFileInfoLabel" });
 
-					var wordsPerPage = Number(this.plugin.settings.wordsPerPage);
-					var currentWords = this.numWords;
+					let wordsPerPage = Number(this.plugin.settings.wordsPerPage);
+					const currentWords = this.numWords;
 
-					var estPages = "";
+					let estPages = "";
 					if ( (typeof wordsPerPage !== "number" || isNaN(wordsPerPage)) ||
 						(typeof currentWords !== "number" || isNaN(currentWords)) ) {
 						estPages = "Words Per Page Setting Is Not Valid";
@@ -272,8 +270,8 @@ export class tlfItemView extends ItemView {
 
 		if ( this.plugin.settings.showWordFrequency ) {
 
-			var report = "";
-			var reportRegex = "";
+			let report = "";
+			let reportRegex = "";
 			if (this.arrCurrentWordFrequency.length > 0) {
 
 				if ( this.plugin.settings.filterFrequency && (this.plugin.settings.filterRegex.length > 0) ) {
@@ -285,8 +283,8 @@ export class tlfItemView extends ItemView {
 					const pattern = new RegExp(regex);
 
 					for (let i in this.arrCurrentWordFrequency) {
-						var word = String(this.arrCurrentWordFrequency[i][0]);
-						var find = word.match(pattern);
+						const word = String(this.arrCurrentWordFrequency[i][0]);
+						const find = word.match(pattern);
 
 						if ( find ) {
 							reportRegex += this.arrCurrentWordFrequency[i][1] + ", " + this.arrCurrentWordFrequency[i][0] + "\n";
@@ -322,8 +320,8 @@ export class tlfItemView extends ItemView {
 
 		if ( this.plugin.settings.showURLFrequency ) {
 
-			var report = "";
-			var reportRegex = "";
+			let report = "";
+			let reportRegex = "";
 			if (this.arrCurrentURLFrequency.length > 0) {
 
 					// the settings plugin auto-escapes the \'s.
@@ -333,8 +331,8 @@ export class tlfItemView extends ItemView {
 					const pattern = new RegExp(regex);
 
 					for (let i in this.arrCurrentURLFrequency) {
-						var word = String(this.arrCurrentURLFrequency[i][0]);
-						var find = word.match(pattern);
+						const word = String(this.arrCurrentURLFrequency[i][0]);
+						const find = word.match(pattern);
 
 						if ( find ) {
 							reportRegex += this.arrCurrentURLFrequency[i][1] + ", " + this.arrCurrentURLFrequency[i][0] + "\n";
