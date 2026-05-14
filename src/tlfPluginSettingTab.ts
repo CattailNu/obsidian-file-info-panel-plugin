@@ -110,10 +110,14 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'File Info Panel Settings'});
+		new Setting(containerEl)
+			.setName("File Info Panel Settings")
+			.setHeading();
 	//	containerEl.createEl('p', {text: 'Reload required for changes to take effect.'});
 
-		containerEl.createEl('h4', {text: 'Implementation'});
+		new Setting(containerEl)
+			.setName("Implementation")
+			.setHeading();
 
 		new Setting(containerEl)
 			.setName("Show Panel")
@@ -145,7 +149,9 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 				});
 		});
 
-		containerEl.createEl('h4', {text: 'File Information'});
+		new Setting(containerEl)
+			.setName("File Information")
+			.setHeading();
 
 		new Setting(containerEl)
 			.setName("Show Date Created")
@@ -236,7 +242,9 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 
-		containerEl.createEl('h4', {text: 'Document Statistics'});
+		new Setting(containerEl)
+			.setName("Document Statistics")
+			.setHeading();
 
 		containerEl.createEl('p', {text: 'The following settings only work for the currently open document and only for md and txt files. Toggle the File Info Panel visibility if you change these settings.'});
 
@@ -320,7 +328,9 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 				});
 		});
 
-		containerEl.createEl('h4', {text: 'Document Word Frequency'});
+		new Setting(containerEl)
+			.setName("Document Word Frequency")
+			.setHeading();
 
 		containerEl.createEl('p', {text: "The following settings only work for the currently open document and only for md and txt files. The extra calculations may affect Obsidian's performance, depending on the size of your documents and your system. Toggle the File Info Panel visibility if you change these settings."});
 
@@ -405,7 +415,9 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 		});
 
 
-		containerEl.createEl('h4', {text: 'Document Selected Text Statistics'});
+		new Setting(containerEl)
+			.setName("Document Selected Text Statistics")
+			.setHeading();
 
 		containerEl.createEl('p', {text: "The following settings only work for the currently open document and only for md and txt files. The extra calculations may affect Obsidian's performance, depending on the size of your documents and your system. Toggle the File Info Panel visibility if you change these settings."});
 
@@ -464,7 +476,9 @@ export class tlfPluginSettingTab extends PluginSettingTab {
 				});
 		});
 
-		containerEl.createEl('h4', {text: 'Front Matter'});
+		new Setting(containerEl)
+			.setName("Front Matter")
+			.setHeading();
 
 		containerEl.createEl('p', {text: 'Front Matter is defined by --- at the top of the file, followed by the properties, and ending with ---.'});
 
