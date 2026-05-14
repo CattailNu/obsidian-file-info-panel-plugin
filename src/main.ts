@@ -84,7 +84,7 @@ export default class tlfFileInfo extends Plugin {
 
 		this.addCommand({
 			id: 'form-info-toggle-window',
-			name: 'Toggle File Info Panel',
+			name: 'Toggle Panel',
 			callback: () => {
 				// open or close the file info window
 				this.toggleView();
@@ -93,7 +93,7 @@ export default class tlfFileInfo extends Plugin {
 
 		this.addCommand({
 			id: 'form-info-show-window',
-			name: 'Show File Info Panel',
+			name: 'Show Panel',
 			callback: () => {
 				// open the file info window
 				this.activateView();
@@ -102,7 +102,7 @@ export default class tlfFileInfo extends Plugin {
 
 		this.addCommand({
 			id: 'form-info-hide-window',
-			name: 'Hide File Info Panel',
+			name: 'Hide Panel',
 			callback: () => {
 				// close the file info window
 				this.deactivateView();
