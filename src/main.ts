@@ -135,11 +135,7 @@ export default class tlfFileInfo extends Plugin {
 				data = await this.app.vault.cachedRead(file);
 			}
 
-			// image file data syntax based on:
-			// https://github.com/mvdkwast/obsidian-copy-as-html/blob/master/main.ts
-
-			// not supporting svg image width/height
-			const imageExtensions = ['gif', 'png', 'jpg', 'jpeg', 'bmp', 'png', 'webp', 'tiff'];
+			const imageExtensions = ['avif', 'bmp', 'gif', 'jpg', 'jpeg', 'png', 'svg', 'webp'];
 			if (file && file.extension && imageExtensions.includes(String(file.extension).toLowerCase())) {
 				isImage = 1;
 				//data = await this.app.vault.cachedRead(file);
@@ -243,14 +239,19 @@ export default class tlfFileInfo extends Plugin {
 				this.currentFileInfo.numImageWidth = imageWidth;
 				this.currentFileInfo.numImageHeight = imageHeight;
 
-				if ( isImage ) {
-					let urlPath = file.path;
-					urlPath = encodeURIComponent(urlPath);
-					urlPath = "app://local/" + this.app.vault.adapter.basePath.replace(/\\/g, '/') + this.currentFileInfo.strRelativePath.replace(/\\/g, '/') + urlPath;
+				if ( isImage && String(file.extension).toLowerCase() === "svg" ) {
+					const imageFilePath = file.path;
+					const svgDimensions = this.getSvgImageDimensions(await this.app.vault.cachedRead(file));
+					if ( this.app.workspace.getActiveFile()?.path !== imageFilePath ) { return; }
+					this.currentFileInfo.numImageWidth = svgDimensions.width;
+					this.currentFileInfo.numImageHeight = svgDimensions.height;
+				} else if ( isImage ) {
+					const imageFilePath = file.path;
+					const urlPath = this.app.vault.getResourcePath(file);
 
 					const img = new Image();
-					img.setAttribute('crossOrigin', 'anonymous');
 					img.onload = () => {
+						if ( this.app.workspace.getActiveFile()?.path !== imageFilePath ) { return; }
 						this.currentFileInfo.numImageWidth = img.naturalWidth;
 						this.currentFileInfo.numImageHeight = img.naturalHeight;
 						this.updateFileInfoDisplays();
@@ -374,6 +375,41 @@ export default class tlfFileInfo extends Plugin {
 			numSelectedParagraphs: 0,
 			numSelectedLines: 0,
 		};
+	}
+
+	getSvgImageDimensions(svgText: string): { width: number; height: number } {
+		const svgDocument = new DOMParser().parseFromString(svgText, "image/svg+xml");
+		const svgElement = svgDocument.querySelector("svg");
+		if ( ! svgElement ) {
+			return { width: 0, height: 0 };
+		}
+
+		const width = this.parseSvgDimension(svgElement.getAttribute("width"));
+		const height = this.parseSvgDimension(svgElement.getAttribute("height"));
+		if ( ! width || ! height ) {
+			return { width: 0, height: 0 };
+		}
+
+		return { width, height };
+	}
+
+	parseSvgDimension(dimension: string | null): number {
+		if ( ! dimension ) {
+			return 0;
+		}
+
+		const match = dimension.trim().match(/^([0-9]+(?:\.[0-9]+)?)(?:px)?$/i);
+		if ( ! match ) {
+			return 0;
+		}
+
+		const rawValue = match[1];
+		if ( ! rawValue ) {
+			return 0;
+		}
+
+		const value = Number(rawValue);
+		return Number.isFinite(value) ? value : 0;
 	}
 
 	updateImplementationSettings() {

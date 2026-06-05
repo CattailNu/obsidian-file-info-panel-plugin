@@ -252,6 +252,9 @@ Featured: Make your own dreamcatcher graphics:
 
 Thank you to those who have taken the time to submit issues on github. Your feedback is helpful!
 
+### 2.0.2
+- Image width/height display fix.
+
 ### 2.0.1
 - Basic lint-housekeeping.
 
